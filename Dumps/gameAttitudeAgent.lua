@@ -1,0 +1,35 @@
+{
+	name: gameAttitudeAgent,
+	functions: {
+		IsDangerous(other: handle:gameAttitudeAgent) => (Bool),
+		GetAttitudeGroup() => (CName),
+		GetAttitudeTowards(other: handle:gameAttitudeAgent) => (EAIAttitude),
+		SetAttitudeGroup(group: CName),
+		SetAttitudeTowards(agent: handle:gameAttitudeAgent, attitude: EAIAttitude),
+		SetAttitudeTowardsAgentGroup(targetAgent: handle:gameAttitudeAgent, ownerAgent: handle:gameAttitudeAgent, attitude: EAIAttitude),
+		GetPS() => (handle:gameComponentPS),
+		GetBasePS() => (handle:gameComponentPS),
+		GetPersistentID() => (gamePersistentID),
+		GetEntity() => (whandle:entEntity),
+		FindComponentByName(componentName: CName) => (whandle:entIComponent),
+		GetName() => (CName),
+		IsEnabled() => (Bool),
+		Toggle(on: Bool),
+		QueueEntityEvent(ev: handle:redEvent),
+		RegisterRenderDebug(filterName: String, functionName: CName),
+		ToString() => (String),
+		GetClassName() => (CName),
+		IsA(className: CName) => (Bool),
+		IsExactlyA(className: CName) => (Bool),
+	},
+	staticFunctions: {
+		DetectScriptableCycles(),
+	},
+	properties: {
+		baseAttitudeGroup: CName,
+		persistentState: handle:gamePersistentState,
+		name: CName,
+		isReplicable: Bool,
+		id: CRUID,
+	}
+}
