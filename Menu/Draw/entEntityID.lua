@@ -1,4 +1,4 @@
-function Inspector.DrawentEntityID(entEntityID)
+function Inspector.DrawentEntityID(self, entEntityID)
 	ImGui.Indent()
 
 	-- Properties
