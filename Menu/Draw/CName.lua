@@ -7,6 +7,7 @@ function Inspector.DrawWindowCName(self, funcName, CName)
 			ImGui.Text("name: " .. name)
 			ImGui.Text("hash_lo: " .. CName["hash_lo"])
 			ImGui.Text("hash_hi: " .. CName["hash_hi"])
+			ImGui.Separator()
 			ImGui.Unindent()
 			ImGui.Unindent()
 		end
