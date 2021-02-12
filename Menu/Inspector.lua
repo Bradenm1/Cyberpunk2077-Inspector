@@ -244,38 +244,28 @@ end
 function Inspector:DrawEditEntity(entity)
 	
 	if ImGui.CollapsingHeader("Entity", ImGuiTreeNodeFlags.Selected) then 
-		ImGui.Indent()
 		self:DrawEditentEntity(entity)
-		ImGui.Unindent()
 	end
 	
 	if ImGui.CollapsingHeader("GameObject", ImGuiTreeNodeFlags.Selected) then 
-		ImGui.Indent()
 		self:DrawEditGameObject(entity)
-		ImGui.Unindent()
 	end
 
 	if entity:IsVehicle() then 
-		if ImGui.CollapsingHeader("vehicleCarBaseObject", ImGuiTreeNodeFlags.Selected) then 
-			ImGui.Indent()
+		if ImGui.CollapsingHeader("vehicleCarBaseObject", ImGuiTreeNodeFlags.Selected) then
 			self:DrawEditvehicleCarBaseObject(entity)
-			ImGui.Unindent()
 		end
 	end
 
 	if entity:IsNPC() or entity:IsPlayer() then 
 		if ImGui.CollapsingHeader("gamePuppet", ImGuiTreeNodeFlags.Selected) then 	
-			ImGui.Indent()
 			self:DrawEditGamePuppet(entity)
-			ImGui.Unindent()
 		end
 	end
 
 	if entity:IsPuppet() then
 		if ImGui.CollapsingHeader("ScriptedPuppet", ImGuiTreeNodeFlags.Selected) then 
-			ImGui.Indent()
 			self:DrawEditScriptedPuppet(entity)
-			ImGui.Unindent()
 		end
 	end
 
@@ -346,7 +336,7 @@ function Inspector:DrawNoEntity()
 end
 
 function Inspector:TargetHint()
-	ImGui.Text("The main Entity Inspector window requires the user to target an Entity. Simply look at an NPC for example from any distance.")
+	ImGui.Text("The main Entity Inspector window requires the user to target an Entity.")
 	ImGui.Text("For example simply look at an NPC at any distance.")
 end
 

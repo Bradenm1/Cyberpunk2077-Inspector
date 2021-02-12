@@ -35,6 +35,7 @@ function Inspector.DrawentEntity(self, entity)
 	end
 
 	-- Variables
+	
 	if entity.statesComponent ~= nil then 
 		self:ObjectToText("regularRecordID", entity.statesComponent.regularRecordID)
 		self:ObjectToText("highLevelAnimFeatureName", entity.statesComponent.highLevelAnimFeatureName)
