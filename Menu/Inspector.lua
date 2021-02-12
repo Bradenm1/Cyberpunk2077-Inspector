@@ -8,14 +8,11 @@ Inspector = {}
 
 	Why not use Modules and Classes for each instance?
 		ImGui seems to get extremely angry when you try create new object within lua for ImGui elements and it either glitches out or crashes the game.
-		I've spent hours trying to get an OOP design to work with ImGui but it seems broken and ImGui can't handle it.
 		An example:
 			If I make each inspector window a 'Inspector' instance and simply loop though an array drawing each one, since the text, buttons and labels are the same names
 			it will cause a overlapping result where both instances are overwritting each others ImGui elements. Even though the ImGui.Begin has a different name for each one.
-		It seems to me every element which contains text in ImGui needs to have unique text and sometimes unique code for the function else it breaks.
+		It seems to me every element which contains text in ImGui seems to need unique text and unique code for the function else it breaks if something else uses it at the same time.
 		if you don't you'll get random as issues that make no sense, maybe i'm missing something seems broken though.
-
-		TDLR: This code design to due to ImGui not liking OOP.
 ]]
 
 -- Fetch required files
@@ -113,6 +110,7 @@ function Inspector:DrawWindow(entity, windowName)
 	end
 end
 
+-- Draw the window as is
 function Inspector:DrawEntityWindowsPlain(entity, windowName)
 	-- Rather a hash compare here
 	if windowName == "Targeted" then

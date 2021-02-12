@@ -8,13 +8,13 @@
 		- 'Draw'
 			Contains the files needed to draw information to the screen for the inspector
 		- 'Misc'
-			Contains misc files used in the project s
+			Contains misc files used in the project
 		- 'Dumps'
 			Contains files I've dumped to view their infomration when adding to the menu.
 
 		Note:
 			Don't take this as the correct way to do things I would rather an OOP approach.
-			This is just how i'm apporeaching it given ImGui's issues with OOP i've encounted within lua.
+			This is just how i'm apporeaching it given the ImGui's issues with OOP i've encounted within lua.
 
 	BradenMenu Information:
 		An inspector tool created for inspecting entities within Cyberpunk 2077.
@@ -144,29 +144,34 @@ function BradenMenu:DrawMainWindowTabs()
 
 		if (ImGui.BeginTabItem("Settings")) then
 			ImGui.Spacing()
-			local value, pressed = ImGui.Checkbox("Always Show Windows", self.AlwaysShow)
-			if pressed then
-				self.AlwaysShow = value
-			end
-	
-			ImGui.Spacing()
-			ImGui.Text("Turning this off will keep entity entries around even when destroyed.")
-			ImGui.Text("They can still be inspected but variables are cached don't exist anymore.")
-			value, pressed = ImGui.Checkbox("Auto Remove Nil Entries", self.AutoRemoveNilEntries)
-			if pressed then 
-				self.AutoRemoveNilEntries = value
-			end
-
-			value, pressed = ImGui.Checkbox("Separate Inspector Windows", self.SeparateWindows)
-			if pressed then 
-				self.SeparateWindows = value
-			end
-
-			ImGui.Spacing()
+			self:DrawDebugTab()
 			ImGui.EndTabItem()
 		end
 	end
 	ImGui.EndTabBar()
+end
+
+-- Draw the Settings tab
+function BradenMenu:DrawSettingsTab()
+	local value, pressed = ImGui.Checkbox("Always Show Windows", self.AlwaysShow)
+	if pressed then
+		self.AlwaysShow = value
+	end
+
+	ImGui.Spacing()
+	ImGui.Text("Turning this off will keep entity entries around even when destroyed.")
+	ImGui.Text("They can still be inspected but variables are cached don't exist anymore.")
+	value, pressed = ImGui.Checkbox("Auto Remove Nil Entries", self.AutoRemoveNilEntries)
+	if pressed then 
+		self.AutoRemoveNilEntries = value
+	end
+
+	value, pressed = ImGui.Checkbox("Separate Inspector Windows", self.SeparateWindows)
+	if pressed then 
+		self.SeparateWindows = value
+	end
+
+	ImGui.Spacing()
 end
 
 -- Display saved entites
@@ -178,6 +183,7 @@ function BradenMenu:DrawSavedEntites()
 			if ImGui.CollapsingHeader(key) then 
 				ImGui.Indent()
 				ImGui.Text("Does Entity still exist: - " .. tostring(not Game:IsEntityNull(value)))
+				-- Check if it's already opened
 				if self.OpenedInspectorWindows[key] == nil then
 						if ImGui.Button("Open " .. key) then 
 							self.OpenedInspectorWindows[key] = value
@@ -187,6 +193,8 @@ function BradenMenu:DrawSavedEntites()
 							self.OpenedInspectorWindows[key] = nil
 						end
 					end
+
+					-- The remove button for deleting a entry and removing the inspector window
 					if key ~= "Player" and ImGui.Button("Remove " .. key) then 
 						self.OpenedInspectorWindows[key] = nil
 						self.SavedEntites[key] = nil 
@@ -202,7 +210,8 @@ function BradenMenu:DrawSavedEntites()
 	ImGui.Unindent()
 end
 
-function BradenMenu:DrawDumpClass()
+-- Draw the the Debug tab
+function BradenMenu:DrawDebugTab()
 	ImGui.Text("Dumps information for a given class to the 'Dumps' directory within the mod.")
 	ImGui.Spacing()
 	text, selected = ImGui.InputTextMultiline("Class Name", self.DumpClassName, 100, 200, 20)
