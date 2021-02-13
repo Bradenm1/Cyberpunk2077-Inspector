@@ -37,6 +37,7 @@ require("Menu/Draw/entEntityID")
 require("Menu/Draw/ScriptedPuppet")
 require("Menu/Draw/vehicleCarBaseObject")
 require("Menu/Draw/gameUniqueItemData")
+require("Menu/Draw/PositionChanger")
 
 -- Constructor
 function Inspector:new(parent)

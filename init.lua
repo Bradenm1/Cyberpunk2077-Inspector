@@ -128,6 +128,54 @@ function BradenMenu:DrawMainWindowTabs()
 			ImGui.EndTabItem()
 		end
 
+		if (ImGui.BeginTabItem("All Objects In View")) then
+			ImGui.Spacing()
+			if ImGui.Button("Destroy All") then
+				self:DoActionAllObjects(
+					function(entity) 
+						entity:GetEntity():Destroy(entity:GetEntity()) 
+					end
+				)
+			end
+
+			if ImGui.Button("Kill All") then
+				self:DoActionAllObjects(
+					function(entity) 
+						if (entity:IsNPC()) then 
+							entity:Kill(entity, false, false) 
+						end
+					end
+				)
+			end
+
+			if ImGui.Button("Kill All") then
+				self:DoActionAllObjects(
+					function(entity) 
+						if (entity:IsNPC()) then 
+							entity:Kill(entity, false, false) 
+						end
+					end
+				)
+			end
+
+			local searchQuery = Game["TSQ_ALL;"]() -- Search ALL objects
+			searchQuery.maxDistance = 1000 -- Set search radius
+			local success, parts = Game.GetTargetingSystem():GetTargetParts(Game:Player(), searchQuery, {})
+			if success then 
+				self.Inspector:DisplayObjectArray("TSQ_ALL", "entEntity", parts,
+					function(key, value) 
+						local obj = value:GetComponent(value):GetEntity()
+						local name = tostring(obj:GetDisplayName()):GetCNameName() or tostring(obj:GetCurrentAppearanceName()):GetCNameName() or ""
+						if self.Inspector:TextToTreeNode("TSQ_ALL - entEntity - " .. key .. " - " .. name) then 
+							self.Inspector:DrawCacheEntityInput(obj)
+							ImGui.Unindent()
+						end 
+					end
+				)
+			end
+			ImGui.EndTabItem()
+		end
+
 		-- The game tab
 		if (ImGui.BeginTabItem("Game")) then
 			ImGui.Spacing()
@@ -150,6 +198,21 @@ function BradenMenu:DrawMainWindowTabs()
 		end
 	end
 	ImGui.EndTabBar()
+end
+
+
+function BradenMenu:DoActionAllObjects(func) 
+	local searchQuery = Game["TSQ_ALL;"]()
+	searchQuery.maxDistance = 1000
+	local success, parts = Game.GetTargetingSystem():GetTargetParts(Game:Player(), searchQuery, {})
+	if success then 
+		for _, v in ipairs(parts) do
+			local entity = v:GetComponent(v):GetEntity()
+			if entity then
+				func(entity) 
+			end
+		end
+	end
 end
 
 -- Draw the Settings tab

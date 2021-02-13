@@ -54,12 +54,6 @@ function Inspector.DrawEditentEntity(self, entity)
 	if ImGui.Button("Destroy") then entity:GetEntity():Destroy(entity:GetEntity()) end
 	if ImGui.Button("UnbindTransform") then entity:GetEntity():UnbindTransform(entity:GetEntity()) end
 	if ImGui.Button("CycleRandomAppearance") then entity:ScheduleAppearanceChange("") end
-	if ImGui.Button("Follow Player") then 
-		local follow = GetSingleton('AIFollowerRole')
-		follow:SetFollowTarget(Game.GetPlayer())
-		entity:GetAIControllerComponent():SetAIRole(follow)
-	end
-
 	local gameGodModeSystem = GetSingleton('gameGodModeSystem')
 	--[[
 		Invulnerable = 0,
@@ -76,34 +70,13 @@ function Inspector.DrawEditentEntity(self, entity)
 
 	local teleportFacility = GetSingleton('gameTeleportationFacility')
 	if ImGui.Button("Teleport Player To Entity") then 
-		teleportFacility:Teleport(Game.GetPlayer(), entity:GetWorldPosition(), EulerAngles.new(0,0,0)) 
+		teleportFacility:Teleport(Game:Player(), entity:GetWorldPosition(), EulerAngles.new(0,0,0)) 
 	end
 	if ImGui.Button("Teleport To Player") then 
-		teleportFacility:Teleport(entity, Game.GetPlayer():GetWorldPosition(), EulerAngles.new(0,0,0))
+		teleportFacility:Teleport(entity, Game:Player():GetWorldPosition(), EulerAngles.new(0,0,0))
 	end
 
-	ImGui.Text("World Position Adjuster - Won't work on NPCs or objects with children")
-	local worldPos = entity:GetWorldPosition()
-	local value, used = ImGui.DragFloat("X", worldPos.x, 0.01)
-	if used then 
-		local worldPos = entity:GetWorldPosition()
-		local newVector4 = Vector4.new(value, worldPos.y, worldPos.z, worldPos.w)
-		teleportFacility:Teleport(entity, newVector4, EulerAngles.new(0,0,0))
-	end
-
-	local value, used = ImGui.DragFloat("Y", worldPos.y, 0.01)
-	if used then 
-		local worldPos = entity:GetWorldPosition()
-		local newVector4 = Vector4.new(worldPos.x, value, worldPos.z, worldPos.w)
-		teleportFacility:Teleport(entity, newVector4, EulerAngles.new(0,0,0))
-	end
-
-	local value, used = ImGui.DragFloat("Z", worldPos.z, 0.01)
-	if used then 
-		local worldPos = entity:GetWorldPosition()
-		local newVector4 = Vector4.new(worldPos.x, worldPos.y, value, worldPos.w)
-		teleportFacility:Teleport(entity, newVector4, EulerAngles.new(0,0,0))
-	end
-
+	self:drawPositionChanger(entity)
+	
 	ImGui.Unindent()
 end

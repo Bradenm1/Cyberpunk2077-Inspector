@@ -1,5 +1,10 @@
 -- The global game functions, simple buttons
-function BradenMenu.DrawGlobalGameFunctionButtons()
+function BradenMenu.DrawGlobalGameFunctionButtons(self)
+
+	ImGui.Text("Player:")
+	self.Inspector:drawPositionChanger(Game:Player())
+	ImGui.Spacing()
+	ImGui.Spacing()
 	if ImGui.Button("Game.ForcedNPCDeath()") then Game.ForcedNPCDeath() end
 	if ImGui.Button("Game.awacstest()") then Game.awacstest() end
 	if ImGui.Button("Game.BreachNearestAP()") then Game.BreachNearestAP() end
