@@ -1,0 +1,38 @@
+{
+	name: scnScriptInterface,
+	functions: {
+		IsFastForwardingAllowed(ffMode: scnFastForwardMode) => (Bool),
+		IsFastForwardingActive(ffMode: scnFastForwardMode) => (Bool),
+		FastForwardingActivate(ffMode: scnFastForwardMode),
+		FastForwardingDeactivate(),
+		SetSceneSystemCameraControlEnabled(enabled: Bool, blendTime: Float),
+		GetSceneSystemCameraControlEnabled() => (Bool),
+		GetSceneSystemCameraLastCameraPosition() => (WorldPosition),
+		GetSceneSystemCameraLastCameraOrientation() => (Quaternion),
+		IsRewindableSectionActive() => (Bool),
+		GetRewindableSectionProgress() => (Float),
+		GetRewindableSectionTimeInSec() => (Float),
+		GetRewindableSectionDurationInSec() => (Float),
+		GetRewindableSectionPlayDirection() => (scnPlayDirection),
+		SetRewindableSectionPlayDirection(direction: scnPlayDirection),
+		GetRewindableSectionPlaySpeed() => (scnPlaySpeed),
+		SetRewindableSectionPlaySpeed(speed: scnPlaySpeed),
+		GetRewindableSectionSpeedModifier() => (Float),
+		IsRewindableSectionPaused() => (Bool),
+		ResetRewindableSection(resetSpeed: Float, postResetPlayDirection: scnPlayDirection, postResetPlaySpeed: scnPlaySpeed),
+		IsRewindableSectionResetting() => (Bool),
+		JumpRewindableSection(resetSpeed: Float, jumpTime: Float, postResetPlayDirection: scnPlayDirection, postResetPlaySpeed: scnPlaySpeed) => (Bool),
+		AreEntitiesInDialogue(firstEntity: entEntityID, secondEntity: entEntityID) => (Bool),
+		IsEntityInDialogue(entity: entEntityID) => (Bool),
+		IsEntityInScene(entity: entEntityID) => (Bool),
+		ToString() => (String),
+		GetClassName() => (CName),
+		IsA(className: CName) => (Bool),
+		IsExactlyA(className: CName) => (Bool),
+	},
+	staticFunctions: {
+		DetectScriptableCycles(),
+	},
+	properties: {
+	}
+}

@@ -45,6 +45,7 @@ function BradenMenu:new()
 	self.AlwaysShow = false
 	self.AutoRemoveNilEntries = true
 	self.SeparateWindows = true
+	self.PrintErrors = true
 	self.DumpClassName = "NPCPuppet" -- Class to dump
 	self.SavedEntites = {} -- The entities the user has saved for the session
 	self.SavedConpoments = {}
@@ -62,12 +63,13 @@ function BradenMenu:RegisterCallbacks()
 
 	registerForEvent("onInit", function(deltaTime)
 		-- Check if the player exists within the saved entities, if not add the player.
-		if self.SavedEntites["Player"] == nil and Game:Player() then 
-			self.SavedEntites["Player"] = Game:Player() 
-		end
 	end)
 
 	registerForEvent("onOverlayOpen", function()
+		if Game:Player() then 
+			self.SavedEntites["Player"] = Game:Player() 
+		end
+		
 		-- Show the UI when Cyber Engine Tweaks closes
 		self.DrawUI = true
     end)
@@ -84,7 +86,7 @@ function BradenMenu:RegisterCallbacks()
 			local success, err = pcall(function () self:DrawWindow() end)
 
 			-- Log error to the Cyber Engine Tweaks console if error occured
-			if success == false then
+			if success == false and self.PrintErrors then
 				print(err)
 			end
 		end
@@ -101,7 +103,6 @@ function BradenMenu:DrawWindow()
 
 		-- Draw the tabs within the window
 		self:DrawMainWindowTabs()
-		
 		-- Draw the other open Entity windows
 		self.Inspector:DrawEntityWindows()
 
@@ -137,14 +138,14 @@ function BradenMenu:DrawMainWindowTabs()
 		-- The debug
 		if (ImGui.BeginTabItem("Debug")) then
 			ImGui.Spacing()
-			self:DrawDumpClass()
+			self:DrawDebugTab()
 			ImGui.EndTabItem()
 		end
 
 
 		if (ImGui.BeginTabItem("Settings")) then
 			ImGui.Spacing()
-			self:DrawDebugTab()
+			self:DrawSettingsTab()
 			ImGui.EndTabItem()
 		end
 	end
@@ -169,6 +170,11 @@ function BradenMenu:DrawSettingsTab()
 	value, pressed = ImGui.Checkbox("Separate Inspector Windows", self.SeparateWindows)
 	if pressed then 
 		self.SeparateWindows = value
+	end
+
+	value, pressed = ImGui.Checkbox("Print Errors", self.PrintErrors)
+	if pressed then 
+		self.PrintErrors = value
 	end
 
 	ImGui.Spacing()
@@ -203,6 +209,7 @@ function BradenMenu:DrawSavedEntites()
 			end
 
 			if self.AutoRemoveNilEntries == true and Game:IsEntityNull(value) then 
+				self.OpenedInspectorWindows[key] = nil
 				self.SavedEntites[key] = nil
 			end
 		--end

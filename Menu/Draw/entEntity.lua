@@ -6,19 +6,20 @@ function Inspector.DrawentEntity(self, entity)
 		function(entEntityID)  self:DrawentEntityID(entEntityID) end
 	)
 	
-	--ImGui.Text("CurrentAppearanceName: " .. tostring(entity:GetCurrentAppearanceName()):match("%[ (%g+) -"))
+	self:ObjectToText("GetControllingPeerID", entity:GetControllingPeerID())
+	--ImGui.Text("CurrentAppearanceName: " .. tostring(entity:GetCurrentAppearanceName())::GetCNameName())
 	self:DrawWindowCName("GetCurrentAppearanceName", entity:GetCurrentAppearanceName())
 	self:DrawWindowCName("GetCurrentContext", entity:GetCurrentContext())
 	self:ObjectToText("GetControllingPeerID", entity:GetControllingPeerID())
 	self:ObjectToText("GetWorldOrientation", entity:GetWorldOrientation())
 	self:DisplayVector4("GetWorldForward", entity:GetWorldForward())
 	self:DisplayVector4("GetWorldPosition", entity:GetWorldPosition())
-	self:DisplayVector4("GetWorldRight", entity:GetWorldPosition())
+	self:DisplayVector4("GetWorldRight", entity:GetWorldRight())
 	self:DisplayVector4("GetWorldUp", entity:GetWorldUp())
 	self:ObjectToText("GetWorldYaw", entity:GetWorldYaw())
 
 	self:DrawNodeTree("GetWorldTransform", "WorldTransform", entity:GetWorldTransform(), 
-		function(worldTransform)  self:DrawWindowWorldTransform(worldTransform) end
+		function(worldTransform)  self:DrawWorldTransform(worldTransform) end
 	)
 
 	--self:AddConpoment(entity:GetWorldTransform())
@@ -58,11 +59,51 @@ function Inspector.DrawEditentEntity(self, entity)
 		follow:SetFollowTarget(Game.GetPlayer())
 		entity:GetAIControllerComponent():SetAIRole(follow)
 	end
+
+	local gameGodModeSystem = GetSingleton('gameGodModeSystem')
+	--[[
+		Invulnerable = 0,
+		Immortal = 1,
+		Mortal = 3
+	]]
+
+	if ImGui.Button("Add Invulnerable") then gameGodModeSystem:AddGodMode(entity:GetEntityID(), 0, "") end
+	if ImGui.Button("Add Immortal") then gameGodModeSystem:AddGodMode(entity:GetEntityID(), 1, "") end
+	if ImGui.Button("Add Mortal") then gameGodModeSystem:AddGodMode(entity:GetEntityID(), 3, "") end
+	if ImGui.Button("Remove Invulnerable") then gameGodModeSystem:RemoveGodMode(entity:GetEntityID(), 0, "") end
+	if ImGui.Button("Remove Immortal") then gameGodModeSystem:RemoveGodMode(entity:GetEntityID(), 1, "") end
+	if ImGui.Button("Remove Mortal") then gameGodModeSystem:RemoveGodMode(entity:GetEntityID(), 3, "") end
+
+	local teleportFacility = GetSingleton('gameTeleportationFacility')
 	if ImGui.Button("Teleport Player To Entity") then 
-		entity:GetGame():GetTeleportationFacility(entity:GetGame()):Teleport(Game.GetPlayer(), entity:GetWorldPosition(), EulerAngles.new(0,0,0)) 
+		teleportFacility:Teleport(Game.GetPlayer(), entity:GetWorldPosition(), EulerAngles.new(0,0,0)) 
 	end
 	if ImGui.Button("Teleport To Player") then 
-		entity:GetGame():GetTeleportationFacility(entity:GetGame()):Teleport(entity, Game.GetPlayer():GetWorldPosition(), EulerAngles.new(0,0,0))
+		teleportFacility:Teleport(entity, Game.GetPlayer():GetWorldPosition(), EulerAngles.new(0,0,0))
 	end
+
+	ImGui.Text("World Position Adjuster - Won't work on NPCs or objects with children")
+	local worldPos = entity:GetWorldPosition()
+	local value, used = ImGui.DragFloat("X", worldPos.x, 0.01)
+	if used then 
+		local worldPos = entity:GetWorldPosition()
+		local newVector4 = Vector4.new(value, worldPos.y, worldPos.z, worldPos.w)
+		teleportFacility:Teleport(entity, newVector4, EulerAngles.new(0,0,0))
+	end
+
+	local value, used = ImGui.DragFloat("Y", worldPos.y, 0.01)
+	if used then 
+		local worldPos = entity:GetWorldPosition()
+		local newVector4 = Vector4.new(worldPos.x, value, worldPos.z, worldPos.w)
+		teleportFacility:Teleport(entity, newVector4, EulerAngles.new(0,0,0))
+	end
+
+	local value, used = ImGui.DragFloat("Z", worldPos.z, 0.01)
+	if used then 
+		local worldPos = entity:GetWorldPosition()
+		local newVector4 = Vector4.new(worldPos.x, worldPos.y, value, worldPos.w)
+		teleportFacility:Teleport(entity, newVector4, EulerAngles.new(0,0,0))
+	end
+
 	ImGui.Unindent()
 end

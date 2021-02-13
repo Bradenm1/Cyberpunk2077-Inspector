@@ -1,0 +1,36 @@
+{
+	name: gamemappinsMappinSystem,
+	functions: {
+		ChangeMappinVariant(id: gameNewMappinID, newVariant: gamedataMappinVariant),
+		SetMappinActive(id: gameNewMappinID, active: Bool),
+		SetMappinDebugCaption(id: gameNewMappinID, caption: String),
+		SetMappinPosition(id: gameNewMappinID, position: Vector4),
+		SetMappinScriptData(id: gameNewMappinID, scriptData: handle:gamemappinsMappinScriptData),
+		RegisterMappin(data: gamemappinsMappinData, position: Vector4) => (gameNewMappinID),
+		RegisterMappinWithObject(data: gamemappinsMappinData, object: whandle:gameObject, slotName: CName, offset: Vector3) => (gameNewMappinID),
+		RegisterGrenadeMappin(data: gamemappinsMappinData, grenadeObject: whandle:gameObject) => (gameNewMappinID),
+		RegisterFastTravelMappin(data: gamemappinsMappinData, fastTravelData: handle:gameFastTravelPointData) => (gameNewMappinID),
+		RegisterRemotePlayerMappin(data: gamemappinsMappinData, playerObject: whandle:gameObject) => (gameNewMappinID),
+		RegisterVehicleMappin(data: gamemappinsMappinData, object: whandle:gameObject, slotName: CName, offset: Vector3) => (gameNewMappinID),
+		UnregisterMappin(id: gameNewMappinID),
+		GetMappins(targetType: gamemappinsMappinTargetType) => (mappins: array:gamemappinsMappinEntry),
+		OnAreaEntered(evt: handle:entAreaEnteredEvent),
+		OnAreaExited(obj: whandle:gameObject, triggerId: entEntityID),
+		OnAreaTypeChanged(entityID: entEntityID, areaType: CName),
+		UpdateCurrentLocationName(locationName: String, isNewLocation: Bool),
+		GetPointOfInterestMappinSavedState(hash: Uint32) => (Bool, mappinPhase: Uint16, mappinVariant: Uint16, active: Bool),
+		GetQuestMappinPositionsByObjective(objectiveHash: Uint32) => (Bool, positions: array:Vector3),
+		GetQuestMappinPosition(mappinHash: Uint32) => (Bool, position: Vector3),
+		SetMappinTrackingAlternative(mappinID: gameNewMappinID, targetMappinID: gameNewMappinID),
+		DebugDiscoverAllPoiMappins(),
+		ToString() => (String),
+		GetClassName() => (CName),
+		IsA(className: CName) => (Bool),
+		IsExactlyA(className: CName) => (Bool),
+	},
+	staticFunctions: {
+		DetectScriptableCycles(),
+	},
+	properties: {
+	}
+}

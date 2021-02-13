@@ -3,7 +3,10 @@ function Inspector.DrawGamePuppet(self, entity)
 
 	-- Functions
 	self:ObjectToText("CanRagdoll" , entity:CanRagdoll())
-
+	self:ObjectToText("GetTweakDBDisplayName", entity:GetTweakDBDisplayName(false))
+	self:ObjectToText("GetTweakDBFullDisplayName", entity:GetTweakDBFullDisplayName(false))
+	self:ObjectToText("GetTweakDBDisplayName FallBack", entity:GetTweakDBDisplayName(true))
+	self:ObjectToText("GetTweakDBFullDisplayName FallBack", entity:GetTweakDBFullDisplayName(true))
 	self:DrawNodeTree("GetAttitude", "gameAttitudeAgent", entity:GetAttitude(), 
 		function(gameAttitudeAgent)  self:DrawgameAttitudeAgent(gameAttitudeAgent) end
 	)

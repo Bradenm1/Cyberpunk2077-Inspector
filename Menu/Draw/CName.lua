@@ -1,6 +1,6 @@
 function Inspector.DrawWindowCName(self, funcName, CName)
 	if CName ~= nil then 
-		local name = tostring(CName):match("%[ (%g+) -")
+		local name = tostring(CName):GetCNameName()
 		if name == nil then name = "nil" end
 		if self:TextToTreeNode(funcName .. " - CName - " .. name) then 
 			ImGui.Indent()

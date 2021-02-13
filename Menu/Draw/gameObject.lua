@@ -19,6 +19,16 @@ function Inspector.DrawGameObject(self, entity)
 		function(trackerComponent) self:DrawAITargetTrackerComponent(trackerComponent) end
 	)
 
+	local bool, items = GetSingleton('gameTransactionSystem'):GetItemList(entity)
+	self:DisplayObjectArray("GetItemList", "gameUniqueItemData", items,
+		function(key, value) 
+			if self:TextToTreeNode("GetItemList - gameUniqueItemData - " .. key .. " - " .. tostring(value:GetName()):GetCNameName()) then 
+				self:DrawgameUniqueItemData(value)
+				ImGui.Unindent()
+			end 
+		end
+	)
+
 	self:ObjectToText("IsAccessPoint", entity:IsAccessPoint())
 	self:ObjectToText("IsActive", entity:IsActive())
 	self:ObjectToText("IsActiveBackdoor", entity:IsActiveBackdoor())
@@ -112,6 +122,8 @@ end
 
 function Inspector.DrawEditGameObject(self, entity)
 	ImGui.Indent()
+	if ImGui.Button("RemoveAllItems") then GetSingleton('gameTransactionSystem'):RemoveAllItems(entity) end
+	if ImGui.Button("ClearAllSlots") then GetSingleton('gameTransactionSystem'):ClearAllSlots(entity) end
 	if ImGui.Button("EvaluateMappinsVisualState") then entity:EvaluateMappinsVisualState() end
 	if ImGui.Button("FadeOutOutlines") then entity:FadeOutOutlines() end
 	if ImGui.Button("FireSingleE3Tick") then entity:FireSingleE3Tick() end
@@ -119,5 +131,6 @@ function Inspector.DrawEditGameObject(self, entity)
 	if ImGui.Button("TryOpenQuickhackMenu") then entity:TryOpenQuickhackMenu(true) end
 	if ImGui.Button("ToggleQuestImportance") then entity:ToggleQuestImportance(false) end
 	if ImGui.Button("EvaluateLastFrameRequest") then entity:EvaluateLastFrameRequest() end
+	
 	ImGui.Unindent()
 end

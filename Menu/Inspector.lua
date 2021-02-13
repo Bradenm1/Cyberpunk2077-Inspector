@@ -36,6 +36,7 @@ require("Menu/Draw/gameItemObject")
 require("Menu/Draw/entEntityID")
 require("Menu/Draw/ScriptedPuppet")
 require("Menu/Draw/vehicleCarBaseObject")
+require("Menu/Draw/gameUniqueItemData")
 
 -- Constructor
 function Inspector:new(parent)
@@ -285,6 +286,22 @@ function Inspector:DisplayObjectArray(name, className, object, func)
 	end
 end
 
+-- Draw objects as an array and run a given func on the object
+function Inspector:DisplayObjectList(name, className, object, func) 
+	if object ~= nil then 
+		if self:TextToTreeNode(name .. ": - " .. className) then 
+			ImGui.Indent()
+			for key, value in pairs(object) do
+				func(key, value)
+			end
+			ImGui.Unindent()
+			ImGui.Unindent()
+		end
+	else
+		self:ObjectToText(name, object)
+	end
+end
+
 -- Draws a Vector4 to the window given the vector4 name and the vector itself
 function Inspector:DisplayVector4(vectorName, vector4) 
     self:DrawNodeTree(vectorName, "Vector4", vector4, 
@@ -323,10 +340,12 @@ end
 
 -- Draws a ImGui text to the window
 function Inspector:ObjectToText(ObjectName, object)
+	--ImGui.PushStyleColor(ImGuiCol.Text, 0.5,0.5,0.5, 1)
 	local text = ObjectName .. ": " .. tostring(object)
 	if self.FilterText == "" or text:StringContains(self.FilterText) ~= nil then
 		ImGui.Text(text)
 	end
+	--ImGui.PopStyleColor()
 end
 
 function Inspector:DrawNoEntity()
