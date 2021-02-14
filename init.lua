@@ -12,6 +12,8 @@
 		- 'Dumps'
 			Contains files I've dumped to view their infomration when adding to the menu.
 
+		I have broken things up into files as I don't want one large file containting everything.
+
 		Note:
 			Don't take this as the correct way to do things I would rather an OOP approach.
 			This is just how i'm apporeaching it given the ImGui's issues with OOP i've encounted within lua.
