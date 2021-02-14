@@ -1,0 +1,38 @@
+{
+	name: gameRPGManager,
+	functions: {
+		ToString() => (String),
+		GetClassName() => (CName),
+		IsA(className: CName) => (Bool),
+		IsExactlyA(className: CName) => (Bool),
+	},
+	staticFunctions: {
+		GetItemData(gi: ScriptGameInstance, owner: handle:gameObject, itemID: gameItemID) => (whandle:gameItemData),
+		GetInnerItemDataQuality(itemData: gameInnerItemData) => (gamedataQuality),
+		GetItemDataQuality(itemData: whandle:gameItemData) => (gamedataQuality),
+		GetFloatItemQuality(qualityStat: Float) => (gamedataQuality),
+		IsInnerItemDataIconic(itemData: gameInnerItemData) => (Bool),
+		IsItemDataIconic(itemData: whandle:gameItemData) => (Bool),
+		IsItemBroken(itemData: handle:gameItemData) => (Bool),
+		IsPercentageStat(stat: gamedataStatType) => (Bool),
+		ShouldFlipNegativeValue(record: whandle:gamedataStat_Record) => (Bool),
+		ShouldSlotBeAvailable(owner: whandle:gameObject, item: gameItemID, attachmentSlotRecord: whandle:gamedataAttachmentSlot_Record) => (Bool),
+		CalculateStatModifiers(modifiers: array:whandle:gamedataStatModifier_Record, context: ScriptGameInstance, root: whandle:gameObject, targetID: gameStatsObjectID, instigator: gameStatsObjectID, itemStatsID: gameStatsObjectID) => (Float),
+		CalculateAdditiveModifiers(modifiers: array:whandle:gamedataStatModifier_Record, context: ScriptGameInstance, root: whandle:gameObject, targetID: gameStatsObjectID, instigator: gameStatsObjectID, itemStatsID: gameStatsObjectID) => (Float),
+		CalculateMultiplierModifiers(modifiers: array:whandle:gamedataStatModifier_Record, context: ScriptGameInstance, root: whandle:gameObject, targetID: gameStatsObjectID, instigator: gameStatsObjectID, itemStatsID: gameStatsObjectID) => (Float),
+		CalculateAdditiveMultiplierModifiers(modifiers: array:whandle:gamedataStatModifier_Record, context: ScriptGameInstance, root: whandle:gameObject, targetID: gameStatsObjectID, instigator: gameStatsObjectID, itemStatsID: gameStatsObjectID) => (Float),
+		CalculateStatModifier(modifier: whandle:gamedataStatModifier_Record, context: ScriptGameInstance, root: whandle:gameObject, targetID: gameStatsObjectID, instigator: gameStatsObjectID, itemStatsID: gameStatsObjectID) => (Float),
+		CalculateConstantModifier(modifier: whandle:gamedataConstantStatModifier_Record) => (Float),
+		CalculateRandomModifier(modifier: whandle:gamedataRandomStatModifier_Record) => (Float),
+		CalculateCurveModifier(modifier: whandle:gamedataCurveStatModifier_Record, context: ScriptGameInstance, root: whandle:gameObject, targetID: gameStatsObjectID, instigator: gameStatsObjectID, itemStatsID: gameStatsObjectID) => (Float),
+		CalculateCombinedModifier(modifier: whandle:gamedataCombinedStatModifier_Record, context: ScriptGameInstance, root: whandle:gameObject, targetID: gameStatsObjectID, instigator: gameStatsObjectID, itemStatsID: gameStatsObjectID) => (Float),
+		GetRefObjectID(refObjectName: CName, context: ScriptGameInstance, root: whandle:gameObject, targetID: gameStatsObjectID, instigator: gameStatsObjectID, itemStatsID: gameStatsObjectID) => (gameStatsObjectID),
+		ApplyAbilityArray(owner: whandle:gameObject, abilities: array:whandle:gamedataGameplayAbility_Record),
+		CalculateBuyPrice(context: ScriptGameInstance, vendor: whandle:gameObject, itemID: gameItemID, multiplier: Float) => (Int32),
+		CalculateSellPrice(context: ScriptGameInstance, vendor: whandle:gameObject, itemID: gameItemID) => (Int32),
+		CalculateSellPriceItemData(context: ScriptGameInstance, vendor: whandle:gameObject, itemData: handle:gameItemData) => (Int32),
+		DetectScriptableCycles(),
+	},
+	properties: {
+	}
+}

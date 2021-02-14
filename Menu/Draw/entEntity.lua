@@ -72,8 +72,8 @@ function Inspector.DrawEditentEntity(self, entity)
 		},
 	}
 
-	-- Loop throught the table
-	for key, value in ipairs(godModeStuff) do
+	-- Loop through the table for the different godmodes
+	for key, value in ipairs(godModeTable) do
 		if (gameGodModeSystem:HasGodMode(entity:GetEntityID(), value.type)) then 
 			if ImGui.Button("Remove " .. value.name) then gameGodModeSystem:RemoveGodMode(entity:GetEntityID(), value.type, "") end
 		else
@@ -87,6 +87,15 @@ function Inspector.DrawEditentEntity(self, entity)
 	end
 	if ImGui.Button("Teleport To Player") then 
 		teleportFacility:Teleport(entity, Game:Player():GetWorldPosition(), EulerAngles.new(0,0,0))
+		
+		--[[local WorldTransform = GetSingleton('WorldTransform')
+		local WorldPosition = GetSingleton('WorldPosition')
+		WorldPosition:SetVector4(entity:GetWorldTransform():GetWorldPosition(), Game:Player():GetWorldPosition())
+		WorldTransform:SetPosition(entity:GetWorldTransform(), Game:Player():GetWorldPosition())
+		WorldTransform:SetWorldPosition(entity:GetWorldTransform(), Game:Player():GetWorldTransform():GetWorldPosition())
+		WorldTransform:SetIdentity(Game:Player():GetWorldTransform())
+
+		WorldTransform.Position = Game:Player():GetWorldTransform():GetWorldPosition()]]
 	end
 
 	self:drawPositionChanger(entity)
