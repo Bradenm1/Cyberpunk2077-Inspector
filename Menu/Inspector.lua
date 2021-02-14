@@ -38,6 +38,8 @@ require("Menu/Draw/ScriptedPuppet")
 require("Menu/Draw/vehicleCarBaseObject")
 require("Menu/Draw/gameUniqueItemData")
 require("Menu/Draw/PositionChanger")
+require("Menu/Draw/gameStatDetailedData")
+require("Menu/Draw/gameStatsBundleHandler")
 
 -- Constructor
 function Inspector:new(parent)
@@ -65,7 +67,7 @@ end
 -- Draw the all inspectors as tabs
 function Inspector:DrawInspectorTabs() 
 	ImGui.SetNextWindowSize(800, 700, ImGuiCond.Appearing)
-	if ImGui.Begin("Inspector") then 
+	if ImGui.Begin("Entity Inspector") then 
 		if ImGui.BeginTabBar("Inspector", ImGuiTabBarFlags.Reorderable) then 
 			-- Draw the main window
 			self:DrawTabs(nil, "Targeted")
@@ -225,11 +227,11 @@ function Inspector:DrawWindowEntityInspecterViewHasEntity(entity)
 	end
 
 	-- Display information related to the ScriptedPuppet
-	if entity:IsPuppet() then
+	--[[if entity:IsPuppet() then
 		if ImGui.CollapsingHeader("ScriptedPuppet") then 
 			self:DrawScriptedPuppet(entity)
 		end
-	end
+	end]]
 
 	-- Display information related to a gameItemObject
 	if entity:IsItem() then
@@ -350,7 +352,7 @@ function Inspector:ObjectToText(ObjectName, object)
 end
 
 function Inspector:DrawNoEntity()
-	ImGui.Text("No Entity at crosshear...")
+	ImGui.Text("No Entity at crosshair...")
 end
 
 function Inspector:TargetHint()

@@ -1,7 +1,8 @@
 function Inspector.DrawWindowCName(self, funcName, CName)
 	if CName ~= nil then 
-		local name = tostring(CName):GetCNameName()
-		if name == nil then name = "nil" end
+		local name = tostring(CName):GetCNameName() or ""
+		ImGui.Text(funcName .. ": " .. name)
+		--[[if name == nil then name = "nil" end
 		if self:TextToTreeNode(funcName .. " - CName - " .. name) then 
 			ImGui.Indent()
 			ImGui.Text("name: " .. name)
@@ -10,7 +11,7 @@ function Inspector.DrawWindowCName(self, funcName, CName)
 			ImGui.Separator()
 			ImGui.Unindent()
 			ImGui.Unindent()
-		end
+		end]]
 	else
 		ImGui.Text(funcName .. " - nil")
 	end

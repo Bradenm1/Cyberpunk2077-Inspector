@@ -44,7 +44,8 @@ function BradenMenu:new()
 	self.DrawUI = false
 	self.AlwaysShow = false
 	self.AutoRemoveNilEntries = true
-	self.SeparateWindows = true
+	self.ShowInspectors = false
+	self.SeparateWindows = false
 	self.PrintErrors = true
 	self.DumpClassName = "NPCPuppet" -- Class to dump
 	self.SavedEntites = {} -- The entities the user has saved for the session
@@ -99,12 +100,15 @@ function BradenMenu:DrawWindow()
 	ImGui.SetNextWindowSize(800, 300, ImGuiCond.Appearing) -- set window size w, h
 	
 	-- Main Window
-	if ImGui.Begin("Debug Menu") then
+	if ImGui.Begin("Debug Menu - Entity Inspector") then
 
 		-- Draw the tabs within the window
 		self:DrawMainWindowTabs()
-		-- Draw the other open Entity windows
-		self.Inspector:DrawEntityWindows()
+
+		if self.ShowInspectors then 
+			-- Draw the other open Entity windows
+			self.Inspector:DrawEntityWindows()
+		end
 
 	end
 	ImGui.End()
@@ -115,7 +119,9 @@ function BradenMenu:DrawMainWindowTabs()
 		if (ImGui.BeginTabItem("Main")) then
 			ImGui.Spacing()
 
-			if ImGui.Button("Close All Inspectors") then
+			BradenMenu:DrawToggleInspectorWindow()
+
+			if ImGui.Button("Close All Entity Inspector Windows") then
 				self.OpenedInspectorWindows = {}
 			end
 			
@@ -130,49 +136,7 @@ function BradenMenu:DrawMainWindowTabs()
 
 		if (ImGui.BeginTabItem("All Objects In View")) then
 			ImGui.Spacing()
-			if ImGui.Button("Destroy All") then
-				self:DoActionAllObjects(
-					function(entity) 
-						entity:GetEntity():Destroy(entity:GetEntity()) 
-					end
-				)
-			end
-
-			if ImGui.Button("Kill All") then
-				self:DoActionAllObjects(
-					function(entity) 
-						if (entity:IsNPC()) then 
-							entity:Kill(entity, false, false) 
-						end
-					end
-				)
-			end
-
-			if ImGui.Button("Kill All") then
-				self:DoActionAllObjects(
-					function(entity) 
-						if (entity:IsNPC()) then 
-							entity:Kill(entity, false, false) 
-						end
-					end
-				)
-			end
-
-			local searchQuery = Game["TSQ_ALL;"]() -- Search ALL objects
-			searchQuery.maxDistance = 1000 -- Set search radius
-			local success, parts = Game.GetTargetingSystem():GetTargetParts(Game:Player(), searchQuery, {})
-			if success then 
-				self.Inspector:DisplayObjectArray("TSQ_ALL", "entEntity", parts,
-					function(key, value) 
-						local obj = value:GetComponent(value):GetEntity()
-						local name = tostring(obj:GetDisplayName()):GetCNameName() or tostring(obj:GetCurrentAppearanceName()):GetCNameName() or ""
-						if self.Inspector:TextToTreeNode("TSQ_ALL - entEntity - " .. key .. " - " .. name) then 
-							self.Inspector:DrawCacheEntityInput(obj)
-							ImGui.Unindent()
-						end 
-					end
-				)
-			end
+			self:DrawAllObjectsTab()
 			ImGui.EndTabItem()
 		end
 
@@ -200,7 +164,15 @@ function BradenMenu:DrawMainWindowTabs()
 	ImGui.EndTabBar()
 end
 
+-- Draw the toggle button for the inspector window
+function BradenMenu:DrawToggleInspectorWindow() 
+	value, pressed = ImGui.Checkbox("Toggle Inspector Window", self.ShowInspectors)
+	if pressed then 
+		self.ShowInspectors = value
+	end
+end
 
+-- Do an action on all the obectives in the players view
 function BradenMenu:DoActionAllObjects(func) 
 	local searchQuery = Game["TSQ_ALL;"]()
 	searchQuery.maxDistance = 1000
@@ -278,6 +250,43 @@ function BradenMenu:DrawSavedEntites()
 		--end
 	end
 	ImGui.Unindent()
+end
+
+-- Draw the the All Objects tab
+function BradenMenu:DrawAllObjectsTab()
+	if ImGui.Button("Destroy All") then
+		self:DoActionAllObjects(
+			function(entity) 
+				entity:GetEntity():Destroy(entity:GetEntity()) 
+			end
+		)
+	end
+
+	if ImGui.Button("Kill All") then
+		self:DoActionAllObjects(
+			function(entity) 
+				if (entity:IsNPC()) then 
+					entity:Kill(entity, false, false) 
+				end
+			end
+		)
+	end
+
+	local searchQuery = Game["TSQ_ALL;"]()
+	searchQuery.maxDistance = 1000
+	local success, parts = Game.GetTargetingSystem():GetTargetParts(Game:Player(), searchQuery, {})
+	if success then 
+		self.Inspector:DisplayObjectArray("TSQ_ALL", "entEntity", parts,
+			function(key, value) 
+				local obj = value:GetComponent(value):GetEntity()
+				local name = tostring(obj:GetDisplayName()):GetCNameName() or tostring(obj:GetCurrentAppearanceName()):GetCNameName() or ""
+				if self.Inspector:TextToTreeNode("TSQ_ALL - entEntity - " .. key .. " - " .. name) then 
+					self.Inspector:DrawCacheEntityInput(obj)
+					ImGui.Unindent()
+				end 
+			end
+		)
+	end
 end
 
 -- Draw the the Debug tab

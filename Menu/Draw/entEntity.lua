@@ -37,13 +37,14 @@ function Inspector.DrawentEntity(self, entity)
 
 	-- Variables
 	
+	--[[
 	if entity.statesComponent ~= nil then 
 		self:ObjectToText("regularRecordID", entity.statesComponent.regularRecordID)
 		self:ObjectToText("highLevelAnimFeatureName", entity.statesComponent.highLevelAnimFeatureName)
 		self:ObjectToText("upperBodyAnimFeatureName", entity.statesComponent.upperBodyAnimFeatureName)
 		self:ObjectToText("stanceAnimFeatureName", entity.statesComponent.stanceAnimFeatureName)
 		self:ObjectToText("name", entity.statesComponent.name)
-	end
+	end]]
 
 	ImGui.Unindent()
 end

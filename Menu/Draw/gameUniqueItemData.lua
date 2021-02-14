@@ -8,7 +8,10 @@ function Inspector.DrawgameUniqueItemData(self, gameUniqueItemData)
     self:ObjectToText("HasPlacementSlot" , gameUniqueItemData:HasPlacementSlot())
     self:ObjectToText("GetTimestamp" , gameUniqueItemData:GetTimestamp())
     self:ObjectToText("GetItemParts" , gameUniqueItemData:GetItemParts())
-    self:ObjectToText("GetTemporaryStatBundle" , gameUniqueItemData:GetTemporaryStatBundle())
+    --self:ObjectToText("GetTemporaryStatBundle" , gameUniqueItemData:GetTemporaryStatBundle())
+    self:DisplayObjectArray("GetTemporaryStatBundle", "gameStatsBundleHandler", objects,
+        function(key, value) self:DrawgameStatsBundleHandler(gameUniqueItemData:GetTemporaryStatBundle()) end
+    )
     self:ObjectToText("GetItemType" , gameUniqueItemData:GetItemType())
     self:DrawWindowCName("GetLocalizedItemType" , gameUniqueItemData:GetLocalizedItemType())
 
