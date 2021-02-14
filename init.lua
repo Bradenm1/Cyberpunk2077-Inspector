@@ -10,7 +10,8 @@
 		- 'Misc'
 			Contains misc files used in the project
 		- 'Dumps'
-			Contains files I've dumped to view their infomration when adding to the menu.
+			Contains files I've dumped to view their information when adding new things to the menu.
+			You can add your own if you use the debug tab.
 
 		I have broken things up into files as I don't want one large file containting everything.
 
