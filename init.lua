@@ -100,7 +100,7 @@ end
 -- The draw function for drawning the window
 function BradenMenu:DrawWindow() 
 	ImGui.SetNextWindowPos(100, 500, ImGuiCond.FirstUseEver) -- set window position x, y
-	ImGui.SetNextWindowSize(800, 300, ImGuiCond.Appearing) -- set window size w, h
+	ImGui.SetNextWindowSize(600, 300, ImGuiCond.Appearing) -- set window size w, h
 	
 	-- Main Window
 	if ImGui.Begin("Debug Menu - Entity Inspector") then
@@ -278,7 +278,7 @@ end
 -- Do an action on all the obectives in the players view
 function BradenMenu:DoActionAllObjects(func) 
 	local searchQuery = Game["TSQ_ALL;"]()
-	searchQuery.maxDistance = 1000
+	searchQuery.maxDistance = 10000
 	local success, parts = Game.GetTargetingSystem():GetTargetParts(Game:Player(), searchQuery, {})
 	if success then 
 		for i, v in ipairs(parts) do

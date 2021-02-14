@@ -66,7 +66,7 @@ end
 
 -- Draw the all inspectors as tabs
 function Inspector:DrawInspectorTabs() 
-	ImGui.SetNextWindowSize(800, 700, ImGuiCond.Appearing)
+	ImGui.SetNextWindowSize(630, 700, ImGuiCond.Appearing)
 	if ImGui.Begin("Entity Inspector") then 
 		if ImGui.BeginTabBar("Inspector", ImGuiTabBarFlags.Reorderable) then 
 			-- Draw the main window
