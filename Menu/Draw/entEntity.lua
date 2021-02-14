@@ -53,7 +53,6 @@ function Inspector.DrawEditentEntity(self, entity)
 	ImGui.Indent()
 	if ImGui.Button("Kill") then entity:Kill(entity, false, false) end
 	if ImGui.Button("Destroy") then entity:GetEntity():Destroy(entity:GetEntity()) end
-	if ImGui.Button("UnbindTransform") then entity:GetEntity():UnbindTransform(entity:GetEntity()) end
 	if ImGui.Button("CycleRandomAppearance") then entity:ScheduleAppearanceChange("") end
 	local gameGodModeSystem = GetSingleton('gameGodModeSystem')
 	--[[
