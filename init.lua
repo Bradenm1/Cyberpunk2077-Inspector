@@ -29,7 +29,7 @@ require("Menu/Misc/String")
 require("Menu/Misc/Game")
 
 BradenMenu = {
-	rootPath = "BradenMenu.",
+	rootPath = "Cyberpunk2077-Inspector.",
 	description = "Tool used for Inspecting Entities among other things."
 }
 
@@ -174,21 +174,6 @@ function BradenMenu:DrawToggleInspectorWindow()
 	end
 end
 
--- Do an action on all the obectives in the players view
-function BradenMenu:DoActionAllObjects(func) 
-	local searchQuery = Game["TSQ_ALL;"]()
-	searchQuery.maxDistance = 1000
-	local success, parts = Game.GetTargetingSystem():GetTargetParts(Game:Player(), searchQuery, {})
-	if success then 
-		for _, v in ipairs(parts) do
-			local entity = v:GetComponent(v):GetEntity()
-			if entity then
-				func(entity) 
-			end
-		end
-	end
-end
-
 -- Draw the Settings tab
 function BradenMenu:DrawSettingsTab()
 	local value, pressed = ImGui.Checkbox("Always Show Windows", self.AlwaysShow)
@@ -258,7 +243,7 @@ end
 function BradenMenu:DrawAllObjectsTab()
 	if ImGui.Button("Destroy All") then
 		self:DoActionAllObjects(
-			function(entity) 
+			function(i, entity) 
 				entity:GetEntity():Destroy(entity:GetEntity()) 
 			end
 		)
@@ -266,7 +251,7 @@ function BradenMenu:DrawAllObjectsTab()
 
 	if ImGui.Button("Kill All") then
 		self:DoActionAllObjects(
-			function(entity) 
+			function(i, entity) 
 				if (entity:IsNPC()) then 
 					entity:Kill(entity, false, false) 
 				end
@@ -274,20 +259,35 @@ function BradenMenu:DrawAllObjectsTab()
 		)
 	end
 
+	self.Inspector:DrawNodeTree("TSQ_ALL", "entEntity", {}, 
+		function() 
+			self:DoActionAllObjects(
+				function(i, entity) 
+					if (entity:IsNPC()) then 
+						local name = tostring(entity:GetDisplayName()):GetCNameName() or tostring(entity:GetCurrentAppearanceName()):GetCNameName() or ""
+						if self.Inspector:TextToTreeNode(i .. " - entEntity - " .. name) then 
+							self.Inspector:DrawCacheEntityInput(entity)
+							ImGui.Unindent()
+						end 
+					end
+				end
+			)
+		end
+	)
+end
+
+-- Do an action on all the obectives in the players view
+function BradenMenu:DoActionAllObjects(func) 
 	local searchQuery = Game["TSQ_ALL;"]()
 	searchQuery.maxDistance = 1000
 	local success, parts = Game.GetTargetingSystem():GetTargetParts(Game:Player(), searchQuery, {})
 	if success then 
-		self.Inspector:DisplayObjectArray("TSQ_ALL", "entEntity", parts,
-			function(key, value) 
-				local obj = value:GetComponent(value):GetEntity()
-				local name = tostring(obj:GetDisplayName()):GetCNameName() or tostring(obj:GetCurrentAppearanceName()):GetCNameName() or ""
-				if self.Inspector:TextToTreeNode("TSQ_ALL - entEntity - " .. key .. " - " .. name) then 
-					self.Inspector:DrawCacheEntityInput(obj)
-					ImGui.Unindent()
-				end 
+		for i, v in ipairs(parts) do
+			local entity = v:GetComponent(v):GetEntity()
+			if entity then
+				func(i, entity) 
 			end
-		)
+		end
 	end
 end
 
