@@ -55,18 +55,31 @@ function Inspector.DrawEditentEntity(self, entity)
 	if ImGui.Button("Destroy") then entity:GetEntity():Destroy(entity:GetEntity()) end
 	if ImGui.Button("CycleRandomAppearance") then entity:ScheduleAppearanceChange("") end
 	local gameGodModeSystem = GetSingleton('gameGodModeSystem')
-	--[[
-		Invulnerable = 0,
-		Immortal = 1,
-		Mortal = 3
-	]]
 
-	if ImGui.Button("Add Invulnerable") then gameGodModeSystem:AddGodMode(entity:GetEntityID(), 0, "") end
-	if ImGui.Button("Add Immortal") then gameGodModeSystem:AddGodMode(entity:GetEntityID(), 1, "") end
-	if ImGui.Button("Add Mortal") then gameGodModeSystem:AddGodMode(entity:GetEntityID(), 3, "") end
-	if ImGui.Button("Remove Invulnerable") then gameGodModeSystem:RemoveGodMode(entity:GetEntityID(), 0, "") end
-	if ImGui.Button("Remove Immortal") then gameGodModeSystem:RemoveGodMode(entity:GetEntityID(), 1, "") end
-	if ImGui.Button("Remove Mortal") then gameGodModeSystem:RemoveGodMode(entity:GetEntityID(), 3, "") end
+	-- Move somewhere else later
+	local godModeTable = {
+		{
+			name = "Invulnerable",
+			type = 0
+		},
+		{
+			name = "Immortal",
+			type = 1
+		},
+		{
+			name = "Mortal",
+			type = 3
+		},
+	}
+
+	-- Loop throught the table
+	for key, value in ipairs(godModeStuff) do
+		if (gameGodModeSystem:HasGodMode(entity:GetEntityID(), value.type)) then 
+			if ImGui.Button("Remove " .. value.name) then gameGodModeSystem:RemoveGodMode(entity:GetEntityID(), value.type, "") end
+		else
+			if ImGui.Button("Add " .. value.name) then gameGodModeSystem:AddGodMode(entity:GetEntityID(), value.type, "") end
+		end
+	end
 
 	local teleportFacility = GetSingleton('gameTeleportationFacility')
 	if ImGui.Button("Teleport Player To Entity") then 
