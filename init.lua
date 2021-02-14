@@ -263,13 +263,11 @@ function BradenMenu:DrawAllObjectsTab()
 		function() 
 			self:DoActionAllObjects(
 				function(i, entity) 
-					if (entity:IsNPC()) then 
-						local name = tostring(entity:GetDisplayName()):GetCNameName() or tostring(entity:GetCurrentAppearanceName()):GetCNameName() or ""
-						if self.Inspector:TextToTreeNode(i .. " - entEntity - " .. name) then 
-							self.Inspector:DrawCacheEntityInput(entity)
-							ImGui.Unindent()
-						end 
-					end
+					local name = tostring(entity:GetDisplayName()):GetCNameName() or tostring(entity:GetCurrentAppearanceName()):GetCNameName() or ""
+					if self.Inspector:TextToTreeNode(i .. " - entEntity - " .. name) then 
+						self.Inspector:DrawCacheEntityInput(entity)
+						ImGui.Unindent()
+					end 
 				end
 			)
 		end
