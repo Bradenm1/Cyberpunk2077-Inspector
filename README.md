@@ -1,6 +1,9 @@
 ![alt text](https://i.imgur.com/flx9rFr.png)
 An inspector tool created for inspecting/editing entities in Cyberpunk 2077.
 
+# Links:
+[Nexus Page Link](https://www.nexusmods.com/cyberpunk2077/mods/1621)
+
 # Who's this for?
 This mod was created for anyone who needs information such as the one this mod provides. Just allows you to view certain variables. Maybe you're creating a mod that edits certain things and you need a way to view that information without having to log everything. You can also do edits with this mod, but, it's basic currently.
 
