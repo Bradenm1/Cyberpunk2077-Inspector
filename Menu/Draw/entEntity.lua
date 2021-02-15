@@ -98,7 +98,7 @@ function Inspector.DrawEditentEntity(self, entity)
 		WorldTransform.Position = Game:Player():GetWorldTransform():GetWorldPosition()]]
 	end
 
-	self:drawPositionChanger(entity)
+	self.PositionChanger:DrawPositionChanger()
 	
 	ImGui.Unindent()
 end

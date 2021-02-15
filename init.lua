@@ -13,12 +13,6 @@
 			Contains files I've dumped to view their information when adding new things to the menu.
 			You can add your own if you use the debug tab.
 
-		I have broken things up into files as I don't want one large file containting everything.
-
-		Note:
-			Don't take this as the correct way to do things I would rather an OOP approach.
-			This is just how i'm apporeaching it given the ImGui's issues with OOP i've encounted within lua.
-
 	BradenMenu Information:
 		An inspector tool created for inspecting entities within Cyberpunk 2077.
 
@@ -43,7 +37,7 @@ function BradenMenu:new()
 	setmetatable(BradenMenu, self)
 	self.__index = self
 
-	-- Register menu vars
+	-- Register vars
 	self.DrawUI = false
 	self.AlwaysShow = false
 	self.AutoRemoveNilEntries = true
@@ -65,8 +59,8 @@ end
 -- Register the callbacks for this mod menu
 function BradenMenu:RegisterCallbacks() 
 
-	registerForEvent("onInit", function(deltaTime)
-		-- Check if the player exists within the saved entities, if not add the player.
+	registerForEvent("onUpdate", function(deltaTime)
+		self:AlwaysRun()
 	end)
 
 	registerForEvent("onOverlayOpen", function()
@@ -97,6 +91,16 @@ function BradenMenu:RegisterCallbacks()
 	end)
 end
 
+function BradenMenu:AlwaysRun()
+	if self.Inspector ~= nil and self.Inspector.PositionChanger ~= nil then
+		self.Inspector:RunAlways()
+	end
+
+	for i, v in pairs(self.OpenedInspectorWindows) do
+		v:RunAlways()
+	end
+end
+
 -- The draw function for drawning the window
 function BradenMenu:DrawWindow() 
 	ImGui.SetNextWindowPos(100, 500, ImGuiCond.FirstUseEver) -- set window position x, y
@@ -119,7 +123,6 @@ function BradenMenu:DrawWindow()
 
 					for i, v in pairs(self.OpenedInspectorWindows) do
 						v:DrawTab()
-						--print("Loop index - " .. tostring(i) .. " ID - " .. tostring(v.UniqueID))
 					end
 				end
 				ImGui.EndTabBar()

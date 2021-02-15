@@ -3,7 +3,7 @@ function BradenMenu.DrawGlobalGameFunctionButtons(self)
 
 	if (ImGui.CollapsingHeader("Player")) then
 		ImGui.Spacing()
-		self.Inspector:drawPositionChanger(Game:Player())
+		--self.Inspector:drawPositionChanger(Game:Player())
 		ImGui.EndTabItem()
 	end
 	if (ImGui.CollapsingHeader("Game Functions")) then

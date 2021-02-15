@@ -5,14 +5,6 @@ Inspector = {}
 
 	The Inspector window:
 		This class also contains the code to run each inspector instance but without creating new objects for each one. 
-
-	Why not use Modules and Classes for each instance?
-		ImGui seems to get extremely angry when you try create new object within lua for ImGui elements and it either glitches out or crashes the game.
-		An example:
-			If I make each inspector window a 'Inspector' instance and simply loop though an array drawing each one, since the text, buttons and labels are the same names
-			it will cause a overlapping result where both instances are overwritting each others ImGui elements. Even though the ImGui.Begin has a different name for each one.
-		It seems to me every element which contains text in ImGui seems to need unique text and unique code for the function else it breaks if something else uses it at the same time.
-		if you don't you'll get random as issues that make no sense, maybe i'm missing something seems broken though.
 ]]
 
 -- Fetch required files
@@ -37,7 +29,6 @@ require("Menu/Draw/entEntityID")
 require("Menu/Draw/ScriptedPuppet")
 require("Menu/Draw/vehicleCarBaseObject")
 require("Menu/Draw/gameUniqueItemData")
-require("Menu/Draw/PositionChanger")
 require("Menu/Draw/gameStatDetailedData")
 require("Menu/Draw/gameStatsBundleHandler")
 
@@ -52,10 +43,14 @@ function Inspector:new(parent, entity, windowName)
 	o.UniqueID = UniqueIDObject:GetNextID()
 	o.Entity = entity
 	o.WindowName = windowName or "Targeted"
-	o.DrawUI = false
+	o.PositionChanger = require("Menu/Objects/PositionChanger"):new(entity)
 
 	self.__index = self
-   return setmetatable(o, self)
+   	return setmetatable(o, self)
+end
+
+function Inspector:RunAlways()
+	self.PositionChanger:RunAlways()
 end
 
 -- Draw the tab
@@ -80,6 +75,7 @@ function Inspector:DrawEntityWindowsPlain(entity, windowName)
 	-- If the given entity is nil for this window use the entity the player is currently looking at
 	if entity == nil then 
 		entity = Game:GetTargetEntity()
+		self.PositionChanger.Entity = entity
 	end
 
 	-- Draw the tabs within the window
@@ -149,7 +145,7 @@ function Inspector:DrawCacheEntityInput(entity)
 	text, selected = ImGui.InputTextMultiline("Name", self.SavedEntityCacheTextName, 100, 200, 20)
 	if selected then self.SavedEntityCacheTextName = text end
 	if ImGui.Button("Save") then 
-		self.Parent.SavedEntites[self.SavedEntityCacheTextName] = require("Menu/Inspector.lua"):new(self.Parent, entity, self.SavedEntityCacheTextName)
+		self.Parent.SavedEntites[self.SavedEntityCacheTextName] = require("Menu/Inspector"):new(self.Parent, entity, self.SavedEntityCacheTextName)
 	end
 end
 
