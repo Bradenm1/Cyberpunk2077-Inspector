@@ -28,6 +28,7 @@
 -- Load some global functions
 require("Menu/Misc/String")
 require("Menu/Misc/Game")
+UniqueIDObject = require("Menu/Misc/UniqueID"):new()
 
 BradenMenu = {
 	rootPath = "Cyberpunk2077-Inspector.",
@@ -39,7 +40,6 @@ require("Menu/Draw/GlobalGameFunctions")
 
 -- Constructor
 function BradenMenu:new()
-
 	setmetatable(BradenMenu, self)
 	self.__index = self
 
@@ -48,16 +48,16 @@ function BradenMenu:new()
 	self.AlwaysShow = false
 	self.AutoRemoveNilEntries = true
 	self.ShowInspectors = false
-	self.SeparateWindows = false
 	self.PrintErrors = true
 	self.DumpClassName = "NPCPuppet" -- Class to dump
 	self.SavedEntites = {} -- The entities the user has saved for the session
 	self.SavedConpoments = {}
 	self.OpenedInspectorWindows = {}
-	self.Inspector = require("Menu/Inspector.lua"):new(self) -- Load and init this module class
+	self.UniqueID = UniqueIDObject:GetNextID()
+	self.Inspector = require("Menu/Inspector.lua"):new(self, nil, "Targeted") -- Load and init this module class
 
 	-- Register the callbacks
-	BradenMenu:RegisterCallbacks()
+	self:RegisterCallbacks()
 
    return BradenMenu
 end
@@ -71,7 +71,7 @@ function BradenMenu:RegisterCallbacks()
 
 	registerForEvent("onOverlayOpen", function()
 		if Game:Player() then 
-			self.SavedEntites["Player"] = Game:Player() 
+			self.SavedEntites["Player"] = require("Menu/Inspector.lua"):new(self, Game:Player(), "Player")
 		end
 		
 		-- Show the UI when Cyber Engine Tweaks closes
@@ -110,7 +110,20 @@ function BradenMenu:DrawWindow()
 
 		if self.ShowInspectors then 
 			-- Draw the other open Entity windows
-			self.Inspector:DrawEntityWindows()
+			--self.Inspector:DrawEntityWindows()
+			ImGui.SetNextWindowSize(630, 700, ImGuiCond.Appearing)
+			if ImGui.Begin("Entity Inspector") then 
+				if ImGui.BeginTabBar("Inspector", ImGuiTabBarFlags.Reorderable) then 
+					-- Draw the main window
+					self.Inspector:DrawTab(nil, "Targeted") -- Draw main tab
+
+					for i, v in pairs(self.OpenedInspectorWindows) do
+						v:DrawTab()
+						--print("Loop index - " .. tostring(i) .. " ID - " .. tostring(v.UniqueID))
+					end
+				end
+				ImGui.EndTabBar()
+			end
 		end
 
 	end
@@ -190,11 +203,6 @@ function BradenMenu:DrawSettingsTab()
 		self.AutoRemoveNilEntries = value
 	end
 
-	value, pressed = ImGui.Checkbox("Separate Inspector Windows", self.SeparateWindows)
-	if pressed then 
-		self.SeparateWindows = value
-	end
-
 	value, pressed = ImGui.Checkbox("Print Errors", self.PrintErrors)
 	if pressed then 
 		self.PrintErrors = value
@@ -208,10 +216,10 @@ function BradenMenu:DrawSavedEntites()
 	ImGui.Text("Saved Entites - ")
 	ImGui.Indent()
 	for key, value in pairs(self.SavedEntites) do
-		--if (value ~= nil) then 
+		if (value ~= nil) then 
 			if ImGui.CollapsingHeader(key) then 
 				ImGui.Indent()
-				ImGui.Text("Does Entity still exist: - " .. tostring(not Game:IsEntityNull(value)))
+				ImGui.Text("Does Entity still exist: - " .. tostring(not Game:IsEntityNull(value.Entity)))
 				-- Check if it's already opened
 				if self.OpenedInspectorWindows[key] == nil then
 						if ImGui.Button("Open " .. key) then 
@@ -231,11 +239,11 @@ function BradenMenu:DrawSavedEntites()
 				ImGui.Unindent()
 			end
 
-			if self.AutoRemoveNilEntries == true and Game:IsEntityNull(value) then 
+			if self.AutoRemoveNilEntries == true and Game:IsEntityNull(value.Entity) then 
 				self.OpenedInspectorWindows[key] = nil
 				self.SavedEntites[key] = nil
 			end
-		--end
+		end
 	end
 	ImGui.Unindent()
 end

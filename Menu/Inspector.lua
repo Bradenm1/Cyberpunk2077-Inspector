@@ -42,76 +42,30 @@ require("Menu/Draw/gameStatDetailedData")
 require("Menu/Draw/gameStatsBundleHandler")
 
 -- Constructor
-function Inspector:new(parent)
-
-	setmetatable(Inspector, self)
-	self.__index = self
+function Inspector:new(parent, entity, windowName)
+	local o = {} 
 
 	-- All inspectors share these vars
-    self.Parent = parent or {} -- The parent window
-    self.SavedEntityCacheTextName = "exampleName"
-    self.FilterText = "" -- The test to filter by on the inspector window
+    o.Parent = parent or {} -- The parent window
+    o.SavedEntityCacheTextName = "exampleName"
+	o.FilterText = "" -- The test to filter by on the inspector window
+	o.UniqueID = UniqueIDObject:GetNextID()
+	o.Entity = entity
+	o.WindowName = windowName or "Targeted"
+	o.DrawUI = false
 
-   return Inspector
-end
-
--- Draw all entity windows
-function Inspector:DrawEntityWindows()
-	if self.Parent.SeparateWindows then 
-		self:DrawInspectorSeparateWindows()
-	else
-		self:DrawInspectorTabs()
-	end
-end
-
--- Draw the all inspectors as tabs
-function Inspector:DrawInspectorTabs() 
-	ImGui.SetNextWindowSize(630, 700, ImGuiCond.Appearing)
-	if ImGui.Begin("Entity Inspector") then 
-		if ImGui.BeginTabBar("Inspector", ImGuiTabBarFlags.Reorderable) then 
-			-- Draw the main window
-			self:DrawTabs(nil, "Targeted")
-
-			self:DrawOtherWindows(function(entity, key) self:DrawTabs(entity, key) end )
-		end
-		ImGui.EndTabBar()
-	end
-end
-
--- Draws all inspectors as separate windows
-function Inspector:DrawInspectorSeparateWindows() 
-	-- Draw the main window
-	self:DrawWindow(nil, "Targeted")
-
-	self:DrawOtherWindows(function(entity, key) self:DrawWindow(entity, key) end )
-end
-
--- Draw the other windows... Garbage code
-function Inspector:DrawOtherWindows(func) 
-	for key, entity in pairs(self.Parent.OpenedInspectorWindows) do
-		func(entity, key)
-
-		if (Game:IsEntityNull(entity) == true) and self.Parent.AutoRemoveNilEntries == true then 
-			table.remove(self.Parent.OpenedInspectorWindows, i)
-		end
-	end
+	self.__index = self
+   return setmetatable(o, self)
 end
 
 -- Draw the tab
-function Inspector:DrawTabs(entity, windowName)
-	if ImGui.BeginTabItem("Entity Inspector - " .. windowName) then 
-		self:DrawEntityWindowsPlain(entity, windowName)
+function Inspector:DrawTab()
+	ImGui.PushID(self.UniqueID)
+	if ImGui.BeginTabItem("Entity Inspector - " .. self.WindowName) then 
+		self:DrawEntityWindowsPlain(self.Entity, self.WindowName)
 		ImGui.EndTabItem()
 	end
-end
-
--- Draw the window
-function Inspector:DrawWindow(entity, windowName)
-	ImGui.SetNextWindowSize(800, 700, ImGuiCond.Appearing)
-	if ImGui.Begin("Entity Inspector - " .. windowName) then 
-		self:DrawEntityWindowsPlain(entity, windowName)
-		ImGui.End()
-	end
+	ImGui.PopID()
 end
 
 -- Draw the window as is
@@ -195,13 +149,12 @@ function Inspector:DrawCacheEntityInput(entity)
 	text, selected = ImGui.InputTextMultiline("Name", self.SavedEntityCacheTextName, 100, 200, 20)
 	if selected then self.SavedEntityCacheTextName = text end
 	if ImGui.Button("Save") then 
-		self.Parent.SavedEntites[self.SavedEntityCacheTextName] = entity
+		self.Parent.SavedEntites[self.SavedEntityCacheTextName] = require("Menu/Inspector.lua"):new(self.Parent, entity, self.SavedEntityCacheTextName)
 	end
 end
 
 -- Draw the collapsing headers for the entity
 function Inspector:DrawWindowEntityInspecterViewHasEntity(entity)
-
 	-- Display information related to the Entity
 	if ImGui.CollapsingHeader("Entity") then
 		self:DrawentEntity(entity)
@@ -307,18 +260,21 @@ end
 
 -- Draws a Vector4 to the window given the vector4 name and the vector itself
 function Inspector:DisplayVector4(vectorName, vector4) 
+	ImGui.PushID(vectorName .. self.UniqueID)
     self:DrawNodeTree(vectorName, "Vector4", vector4, 
-        function() 
+		function() 
             self:ObjectToText("X", vector4.x)
 			self:ObjectToText("Y", vector4.y)
 			self:ObjectToText("Z", vector4.z)
             self:ObjectToText("W", vector4.w)
         end
-    )
+	)
+	ImGui.PopID()
 end
 
 -- Draws a TreeNode given certain information
 function Inspector:DrawNodeTree(name, className, object, func)
+	ImGui.PushID(name .. className .. self.UniqueID)
 	if object ~= nil then 
 		if self:TextToTreeNode(name .. " - " .. className) then 
 			func(object)
@@ -326,8 +282,9 @@ function Inspector:DrawNodeTree(name, className, object, func)
 			ImGui.Unindent()
 		end
 	else
-		Inspector:ObjectToText(name, object)
+		self:ObjectToText(name, object)
 	end
+	ImGui.PopID()
 end
 
 -- Draws the filter input
@@ -338,17 +295,20 @@ end
 
 -- Draws a ImGui tree node to the window
 function Inspector:TextToTreeNode(text)
-	return (self.FilterText == "" or text:StringContains(self.FilterText) ~= nil) and ImGui.TreeNode(text) 
+	ImGui.PushID(text .. self.UniqueID)
+	local open = (self.FilterText == "" or text:StringContains(self.FilterText) ~= nil) and ImGui.TreeNode(text) 
+	ImGui.PopID()
+	return open
 end
 
 -- Draws a ImGui text to the window
 function Inspector:ObjectToText(ObjectName, object)
-	--ImGui.PushStyleColor(ImGuiCol.Text, 0.5,0.5,0.5, 1)
+	ImGui.PushID(ObjectName .. self.UniqueID)
 	local text = ObjectName .. ": " .. tostring(object)
 	if self.FilterText == "" or text:StringContains(self.FilterText) ~= nil then
 		ImGui.Text(text)
 	end
-	--ImGui.PopStyleColor()
+	ImGui.PopID()
 end
 
 function Inspector:DrawNoEntity()
