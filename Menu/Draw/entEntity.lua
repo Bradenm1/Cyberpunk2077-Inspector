@@ -58,10 +58,10 @@ function Inspector.DrawEditentEntity(self, entity)
 	if Game.GetPreventionSpawnSystem():GetNumberOfSpawnedPreventionUnits() >= maxSpawn then 
 		if ImGui.Button("Delete Clones") then 
 			Game.GetPreventionSpawnSystem():RequestDespawnPreventionLevel(idLayer)
-		end`
+		end
 	else
 		if ImGui.Button("Spawn Clone") then 
-			local lastSpawned = Game.GetPreventionSpawnSystem():RequestSpawn(entity:GetRecordID(), idLayer, Game.GetPlayer():GetWorldTransform()) 
+			local lastSpawned = Game.GetPreventionSpawnSystem():RequestSpawn(entity:GetRecordID(), idLayer, Game.GetPlayer():GetWorldTransform())
 			self.Parent.SavedEntites["Spawned Clone"] = require("Menu/Inspector"):new(self.Parent, Game.FindEntityByID(lastSpawned), "Spawned Clone")
 		end
 	end
