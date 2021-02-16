@@ -31,6 +31,8 @@ require("Menu/Draw/vehicleCarBaseObject")
 require("Menu/Draw/gameUniqueItemData")
 require("Menu/Draw/gameStatDetailedData")
 require("Menu/Draw/gameStatsBundleHandler")
+require("Menu/Draw/animActionAnimDatabase")
+require("Menu/Draw/entAnimationControllerComponent")
 
 -- Constructor
 function Inspector:new(parent, entity, windowName)
@@ -74,7 +76,7 @@ function Inspector:DrawEntityWindowsPlain(entity, windowName)
 	
 	-- If the given entity is nil for this window use the entity the player is currently looking at
 	if entity == nil then 
-		entity = Game:GetTargetEntity()
+		entity = Game:BMGetTargetEntity()
 		self.PositionChanger.Entity = entity
 	end
 
@@ -292,7 +294,7 @@ end
 -- Draws a ImGui tree node to the window
 function Inspector:TextToTreeNode(text)
 	ImGui.PushID(text .. self.UniqueID)
-	local open = (self.FilterText == "" or text:StringContains(self.FilterText) ~= nil) and ImGui.TreeNode(text) 
+	local open = (self.FilterText == "" or text:BMContains(self.FilterText) ~= nil) and ImGui.TreeNode(text) 
 	ImGui.PopID()
 	return open
 end
@@ -301,7 +303,7 @@ end
 function Inspector:ObjectToText(ObjectName, object)
 	ImGui.PushID(ObjectName .. self.UniqueID)
 	local text = ObjectName .. ": " .. tostring(object)
-	if self.FilterText == "" or text:StringContains(self.FilterText) ~= nil then
+	if self.FilterText == "" or text:BMContains(self.FilterText) ~= nil then
 		ImGui.Text(text)
 	end
 	ImGui.PopID()

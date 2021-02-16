@@ -24,8 +24,11 @@ function Inspector.DrawGamePuppet(self, entity)
 		function(key, value) self:DrawgameItemObject("gameItemObject", value)end
 	)
 
-	self:DrawWindowCName("GetGender", entity:GetGender())
+	self:DrawNodeTree("GetAnimationControllerComponent", "entAnimationControllerComponent", entity:GetAnimationControllerComponent(), 
+		function(entAnimationControllerComponent)  self:DrawentAnimationControllerComponent(entAnimationControllerComponent) end
+	)
 
+	self:DrawWindowCName("GetGender", entity:GetGender())
 	self:DrawWindowCName("GetBodyType", entity:GetBodyType())
 	self:DisplayVector4("GetLastValidNavmeshPoint", entity:GetLastValidNavmeshPoint()) 
 	self:DrawWindowCName("GetResolvedGenderName", entity:GetResolvedGenderName())
@@ -40,17 +43,18 @@ end
 
 function Inspector.DrawEditGamePuppet(self, entity)
 	ImGui.Indent()
+	if ImGui.Button("SetForcedVisible") then Game.GetAnimationSystem():SetForcedVisible(entity:GetEntityID(), true) end
 	if ImGui.Button("CacheLootForDroping") then entity:CacheLootForDroping() end
 	if ImGui.Button("DropAmmo") then entity:DropAmmo() end
 	if ImGui.Button("DropLootBag") then entity:DropLootBag() end
 	if ImGui.Button("DropWeapons") then entity:DropWeapons() end
 	if ImGui.Button("GenerateLoot") then entity:GenerateLoot() end
 	if ImGui.Button("SendAIDeathSignal") then entity:SendAIDeathSignal() end
-	if ImGui.Button("SetIsDead") then entity:GetPuppetPS():SetIsDead(true) end
+	--if ImGui.Button("SetIsDead") then entity:GetPuppetPS():SetIsDead(true) end
 	if ImGui.Button("SetAttitudeGroup hostile") then entity:GetAttitude():SetAttitudeGroup("hostile") end
 	if ImGui.Button("SetAttitudeGroup civilian") then entity:GetAttitude():SetAttitudeGroup("civilian") end
 	if ImGui.Button("SetAttitudeGroup neutral") then entity:GetAttitude():SetAttitudeGroup("neutral") end
 	if ImGui.Button("Toggle Move Policies") then entity:GetMovePolicesComponent():Toggle(not entity:GetMovePolicesComponent():IsEnabled()) end
-	if ImGui.Button("Toggle Dismemberment") then entity:GetDismembermentComponent():Toggle(not entity:GetDismembermentComponent():IsEnabled()) end
+	--if ImGui.Button("Toggle Dismemberment") then entity:GetDismembermentComponent():Toggle(not entity:GetDismembermentComponent():IsEnabled()) end
 	ImGui.Unindent()
 end

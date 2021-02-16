@@ -22,7 +22,7 @@ function Inspector.DrawGameObject(self, entity)
 	local bool, items = GetSingleton('gameTransactionSystem'):GetItemList(entity)
 	self:DisplayObjectArray("GetItemList", "gameUniqueItemData", items,
 		function(key, value) 
-			if self:TextToTreeNode("GetItemList - gameUniqueItemData - " .. key .. " - " .. tostring(value:GetName()):GetCNameName()) then 
+			if self:TextToTreeNode("GetItemList - gameUniqueItemData - " .. key .. " - " .. tostring(Game.NameToString(value:GetName()))) then 
 				self:DrawgameUniqueItemData(value)
 				ImGui.Unindent()
 			end 

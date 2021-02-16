@@ -64,8 +64,8 @@ function BradenMenu:RegisterCallbacks()
 	end)
 
 	registerForEvent("onOverlayOpen", function()
-		if Game:Player() then 
-			self.SavedEntites["Player"] = require("Menu/Inspector.lua"):new(self, Game:Player(), "Player")
+		if Game.GetPlayer() then 
+			self.SavedEntites["Player"] = require("Menu/Inspector.lua"):new(self, Game.GetPlayer(), "Player")
 		end
 		
 		-- Show the UI when Cyber Engine Tweaks closes
@@ -222,7 +222,7 @@ function BradenMenu:DrawSavedEntites()
 		if (value ~= nil) then 
 			if ImGui.CollapsingHeader(key) then 
 				ImGui.Indent()
-				ImGui.Text("Does Entity still exist: - " .. tostring(not Game:IsEntityNull(value.Entity)))
+				ImGui.Text("Does Entity still exist: - " .. tostring(not Game:BMIsEntityNull(value.Entity)))
 				-- Check if it's already opened
 				if self.OpenedInspectorWindows[key] == nil then
 						if ImGui.Button("Open " .. key) then 
@@ -242,7 +242,7 @@ function BradenMenu:DrawSavedEntites()
 				ImGui.Unindent()
 			end
 
-			if self.AutoRemoveNilEntries == true and Game:IsEntityNull(value.Entity) then 
+			if self.AutoRemoveNilEntries == true and Game:BMIsEntityNull(value.Entity) then 
 				self.OpenedInspectorWindows[key] = nil
 				self.SavedEntites[key] = nil
 			end
@@ -275,7 +275,8 @@ function BradenMenu:DrawAllObjectsTab()
 		function() 
 			self:DoActionAllObjects(
 				function(i, entity) 
-					local name = tostring(entity:GetDisplayName()):GetCNameName() or tostring(entity:GetCurrentAppearanceName()):GetCNameName() or ""
+					local name = Game.NameToString(entity:GetDisplayName())
+					if name == "" then name = Game.NameToString(entity:GetCurrentAppearanceName()) end
 					if self.Inspector:TextToTreeNode(i .. " - entEntity - " .. name) then 
 						self.Inspector:DrawCacheEntityInput(entity)
 						ImGui.Unindent()
@@ -290,7 +291,7 @@ end
 function BradenMenu:DoActionAllObjects(func) 
 	local searchQuery = Game["TSQ_ALL;"]()
 	searchQuery.maxDistance = 10000
-	local success, parts = Game.GetTargetingSystem():GetTargetParts(Game:Player(), searchQuery, {})
+	local success, parts = Game.GetTargetingSystem():GetTargetParts(Game.GetPlayer(), searchQuery, {})
 	if success then 
 		for i, v in ipairs(parts) do
 			local entity = v:GetComponent(v):GetEntity()

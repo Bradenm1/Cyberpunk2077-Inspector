@@ -51,6 +51,26 @@ end
 
 function Inspector.DrawEditentEntity(self, entity)
 	ImGui.Indent()
+	local idLayer = -13
+	local maxSpawn = 10
+
+	-- lastSpwned seems to be buggy when cloing recordIDs
+	if Game.GetPreventionSpawnSystem():GetNumberOfSpawnedPreventionUnits() >= maxSpawn then 
+		if ImGui.Button("Delete Clones") then 
+			Game.GetPreventionSpawnSystem():RequestDespawnPreventionLevel(idLayer)
+		end`
+	else
+		if ImGui.Button("Spawn Clone") then 
+			local lastSpawned = Game.GetPreventionSpawnSystem():RequestSpawn(entity:GetRecordID(), idLayer, Game.GetPlayer():GetWorldTransform()) 
+			self.Parent.SavedEntites["Spawned Clone"] = require("Menu/Inspector"):new(self.Parent, Game.FindEntityByID(lastSpawned), "Spawned Clone")
+			print(Game.GetPreventionSpawnSystem():GetNumberOfSpawnedPreventionUnits())
+		end
+	end
+	ImGui.SameLine()
+	ImGui.Text("This will conflict with things spawned on other mods.")
+	ImGui.Text("Will spawn the clone inside the player, at the same orientation")
+	ImGui.Spacing()
+
 	if ImGui.Button("Kill") then entity:Kill(entity, false, false) end
 	if ImGui.Button("Destroy") then entity:GetEntity():Destroy(entity:GetEntity()) end
 	if ImGui.Button("CycleRandomAppearance") then entity:ScheduleAppearanceChange("") end
@@ -83,19 +103,19 @@ function Inspector.DrawEditentEntity(self, entity)
 
 	local teleportFacility = GetSingleton('gameTeleportationFacility')
 	if ImGui.Button("Teleport Player To Entity") then 
-		teleportFacility:Teleport(Game:Player(), entity:GetWorldPosition(), EulerAngles.new(0,0,0)) 
+		teleportFacility:Teleport(Game.GetPlayer(), entity:GetWorldPosition(), EulerAngles.new(0,0,0)) 
 	end
 	if ImGui.Button("Teleport To Player") then 
-		teleportFacility:Teleport(entity, Game:Player():GetWorldPosition(), EulerAngles.new(0,0,0))
+		teleportFacility:Teleport(entity, Game.GetPlayer():GetWorldPosition(), EulerAngles.new(0,0,0))
 		
 		--[[local WorldTransform = GetSingleton('WorldTransform')
 		local WorldPosition = GetSingleton('WorldPosition')
-		WorldPosition:SetVector4(entity:GetWorldTransform():GetWorldPosition(), Game:Player():GetWorldPosition())
-		WorldTransform:SetPosition(entity:GetWorldTransform(), Game:Player():GetWorldPosition())
-		WorldTransform:SetWorldPosition(entity:GetWorldTransform(), Game:Player():GetWorldTransform():GetWorldPosition())
-		WorldTransform:SetIdentity(Game:Player():GetWorldTransform())
+		WorldPosition:SetVector4(entity:GetWorldTransform():GetWorldPosition(), Game.GetPlayer():GetWorldPosition())
+		WorldTransform:SetPosition(entity:GetWorldTransform(), Game.GetPlayer():GetWorldPosition())
+		WorldTransform:SetWorldPosition(entity:GetWorldTransform(), Game.GetPlayer():GetWorldTransform():GetWorldPosition())
+		WorldTransform:SetIdentity(Game.GetPlayer():GetWorldTransform())
 
-		WorldTransform.Position = Game:Player():GetWorldTransform():GetWorldPosition()]]
+		WorldTransform.Position = Game.GetPlayer():GetWorldTransform():GetWorldPosition()]]
 	end
 
 	self.PositionChanger:DrawPositionChanger()
