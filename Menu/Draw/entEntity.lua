@@ -63,7 +63,6 @@ function Inspector.DrawEditentEntity(self, entity)
 		if ImGui.Button("Spawn Clone") then 
 			local lastSpawned = Game.GetPreventionSpawnSystem():RequestSpawn(entity:GetRecordID(), idLayer, Game.GetPlayer():GetWorldTransform()) 
 			self.Parent.SavedEntites["Spawned Clone"] = require("Menu/Inspector"):new(self.Parent, Game.FindEntityByID(lastSpawned), "Spawned Clone")
-			print(Game.GetPreventionSpawnSystem():GetNumberOfSpawnedPreventionUnits())
 		end
 	end
 	ImGui.SameLine()
