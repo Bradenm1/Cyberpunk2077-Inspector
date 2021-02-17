@@ -27,6 +27,16 @@ function Inspector.DrawentEntity(self, entity)
 	self:ObjectToText("IsControlledByAnotherClient", entity:IsControlledByAnotherClient())
 	self:ObjectToText("IsControlledByAnyPeer", entity:IsControlledByAnyPeer())
 	self:ObjectToText("IsControlledByLocalPeer", entity:IsControlledByLocalPeer())
+	self:ObjectToText("ShouldEnableRemoteLayer", entity:ShouldEnableRemoteLayer())
+	self:ObjectToText("HasDirectActionsActive", entity:HasDirectActionsActive())
+	self:ObjectToText("CanRevealRemoteActionsWheel", entity:CanRevealRemoteActionsWheel())
+	self:ObjectToText("ShouldRegisterToHUD", entity:ShouldRegisterToHUD())
+	self:ObjectToText("GetIsIconic", entity:GetIsIconic())
+	self:ObjectToText("GetContentScale", entity:GetContentScale())
+	self:ObjectToText("IsExplosive", entity:IsExplosive())
+	self:ObjectToText("IsFastTravelPoint", entity:IsFastTravelPoint())
+	self:ObjectToText("HasAnySlaveDevices", entity:HasAnySlaveDevices())
+	self:ObjectToText("IsBodyDisposalPossible", entity:IsBodyDisposalPossible())
 	self:ObjectToText("IsReplicated", entity:IsReplicated())
 
 	if entity:IsPlayer() then
@@ -68,8 +78,22 @@ function Inspector.DrawEditentEntity(self, entity)
 	ImGui.SameLine()
 	ImGui.Text("This will conflict with things spawned on other mods.")
 	ImGui.Text("Will spawn the clone inside the player, at the same orientation")
+	ImGui.Text("Doing it with vehicles can cause major issues")
 	ImGui.Spacing()
 
+
+	--[[if ImGui.Button("ASDASD") then 
+		entity:GetTakeOverControlSystem():RegisterAsCurrentObject(entity:GetEntityID()) 
+		entity:GetTakeOverControlSystem():RegisterObjectHandle(entity:GetEntityID())
+		entity:GetTakeOverControlSystem().controlledObject = entity
+		entity:GetTakeOverControlSystem():EnablePlayerTPPRepresenation(true)
+		entity:GetTakeOverControlSystem():ShowChainControls(true)
+		entity:GetTakeOverControlSystem():RegisterSystemOnInput(true)
+		entity:GetTakeOverControlSystem():EnablePlayerTPPRepresenation(true)
+		entity:GetTakeOverControlSystem():ToggleToNextControlledDevice()
+		entity:GetTakeOverControlSystem():EnablePlayerTPPRepresenation(true)
+		entity:GetAIControllerComponent():GetActionAnimationScriptProxy():Bind(Game.GetPlayer())
+	end]]
 	if ImGui.Button("Kill") then entity:Kill(entity, false, false) end
 	if ImGui.Button("Destroy") then entity:GetEntity():Destroy(entity:GetEntity()) end
 	if ImGui.Button("CycleRandomAppearance") then entity:ScheduleAppearanceChange("") end

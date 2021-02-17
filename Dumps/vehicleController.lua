@@ -1,0 +1,37 @@
+{
+	name: vehicleController,
+	functions: {
+		SetLightColor(lightType: vehicleELightType, color: Color, inTime: Float),
+		ResetLightColor(lightType: vehicleELightType, inTime: Float),
+		SetLightStrength(lightType: vehicleELightType, strength: Float, inTime: Float),
+		ResetLightStrength(lightType: vehicleELightType, inTime: Float),
+		SetLightParameters(lightType: vehicleELightType, strength: Float, color: Color, inTime: Float),
+		ResetLightParameters(lightType: vehicleELightType, inTime: Float),
+		ToggleLights(on: Bool, lightType: vehicleELightType, inTime: Float, lerpCurve: CName, loop: Bool),
+		GetPS() => (handle:gameComponentPS),
+		GetBasePS() => (handle:gameComponentPS),
+		GetPersistentID() => (gamePersistentID),
+		GetEntity() => (whandle:entEntity),
+		FindComponentByName(componentName: CName) => (whandle:entIComponent),
+		GetName() => (CName),
+		IsEnabled() => (Bool),
+		Toggle(on: Bool),
+		QueueEntityEvent(ev: handle:redEvent),
+		RegisterRenderDebug(filterName: String, functionName: CName),
+		ToString() => (String),
+		GetClassName() => (CName),
+		IsA(className: CName) => (Bool),
+		IsExactlyA(className: CName) => (Bool),
+	},
+	staticFunctions: {
+		DetectScriptableCycles(),
+	},
+	properties: {
+		alarmCurve: CName,
+		alarmTime: Float,
+		persistentState: handle:gamePersistentState,
+		name: CName,
+		isReplicable: Bool,
+		id: CRUID,
+	}
+}

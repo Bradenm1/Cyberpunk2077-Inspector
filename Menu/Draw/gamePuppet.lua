@@ -37,6 +37,9 @@ function Inspector.DrawGamePuppet(self, entity)
 	self:ObjectToText("HasCrowdStaticLOD" , entity:HasCrowdStaticLOD())
 	self:ObjectToText("IsLooted" , entity:IsLooted())
 	self:ObjectToText("WasLootGenerated" , entity:WasLootGenerated())
+	self:ObjectToText("IsPlayerAround", entity:IsPlayerAround())
+	self:ObjectToText("GetICELevel", entity:GetICELevel())
+	self:ObjectToText("GetPingDuration", entity:GetPingDuration())
 
 	ImGui.Unindent()
 end
@@ -45,9 +48,9 @@ function Inspector.DrawEditGamePuppet(self, entity)
 	ImGui.Indent()
 	if ImGui.Button("SetForcedVisible") then Game.GetAnimationSystem():SetForcedVisible(entity:GetEntityID(), true) end
 	if ImGui.Button("CacheLootForDroping") then entity:CacheLootForDroping() end
+	if ImGui.Button("DropWeapons") then entity:DropWeapons() end
 	if ImGui.Button("DropAmmo") then entity:DropAmmo() end
 	if ImGui.Button("DropLootBag") then entity:DropLootBag() end
-	if ImGui.Button("DropWeapons") then entity:DropWeapons() end
 	if ImGui.Button("GenerateLoot") then entity:GenerateLoot() end
 	if ImGui.Button("SendAIDeathSignal") then entity:SendAIDeathSignal() end
 	--if ImGui.Button("SetIsDead") then entity:GetPuppetPS():SetIsDead(true) end
