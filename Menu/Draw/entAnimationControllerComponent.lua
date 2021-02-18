@@ -1,11 +1,11 @@
 function Inspector.DrawentAnimationControllerComponent(self, entAnimationControllerComponent)
 
-    self:ObjectToText("animDatabaseCollection", entAnimationControllerComponent.animDatabaseCollection)
+    BradenMenu.IGE.ObjectToText("animDatabaseCollection", entAnimationControllerComponent.animDatabaseCollection)
     self:DrawWindowCName("name", entAnimationControllerComponent.name)
         
-    self:DrawNodeTree("animDatabaseCollection", "animAnimDatabaseCollection", entAnimationControllerComponent.animDatabaseCollection, 
+    BradenMenu.IGE.DrawNodeTree("animDatabaseCollection", "animAnimDatabaseCollection", entAnimationControllerComponent.animDatabaseCollection, 
         function(animDatabaseCollection) 
-            self:DisplayObjectArray("animDatabases", "animAnimDatabaseCollectionEntry", animDatabaseCollection.animDatabases,
+            BradenMenu.IGE.DisplayObjectArray("animDatabases", "animAnimDatabaseCollectionEntry", animDatabaseCollection.animDatabases,
             function(key, value) 
                 self:DrawWindowCName("name", value.name)
             end
@@ -13,7 +13,7 @@ function Inspector.DrawentAnimationControllerComponent(self, entAnimationControl
         end
     )
 
-    self:DrawNodeTree("actionAnimDatabaseRef", "animActionAnimDatabase", entAnimationControllerComponent.actionAnimDatabaseRef, 
+    BradenMenu.IGE.DrawNodeTree("actionAnimDatabaseRef", "animActionAnimDatabase", entAnimationControllerComponent.actionAnimDatabaseRef, 
     function(actionAnimDatabaseRef) self:DrawanimActionAnimDatabase(actionAnimDatabaseRef) end
 )
 end

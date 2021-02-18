@@ -41,8 +41,7 @@ function Inspector:new(parent, entity, windowName)
 	-- All inspectors share these vars
     o.Parent = parent or {} -- The parent window
     o.SavedEntityCacheTextName = "exampleName"
-	o.FilterText = "" -- The test to filter by on the inspector window
-	o.UniqueID = UniqueIDObject:GetNextID()
+	o.UniqueID = BradenMenu.UniqueIDObject:GetNextID()
 	o.Entity = entity
 	o.WindowName = windowName or "Targeted"
 	o.PositionChanger = require("Menu/Objects/PositionChanger"):new(entity)
@@ -224,89 +223,10 @@ function Inspector:DrawEditEntity(entity)
 
 end
 
--- Draw objects as an array and run a given func on the object
-function Inspector:DisplayObjectArray(name, className, object, func) 
-	if object ~= nil then 
-		if self:TextToTreeNode(name .. ": - " .. className) then 
-			ImGui.Indent()
-			for key, value in ipairs(object) do
-				func(key, value)
-			end
-			ImGui.Unindent()
-			ImGui.Unindent()
-		end
-	else
-		self:ObjectToText(name, object)
-	end
-end
-
--- Draw objects as an array and run a given func on the object
-function Inspector:DisplayObjectList(name, className, object, func) 
-	if object ~= nil then 
-		if self:TextToTreeNode(name .. ": - " .. className) then 
-			ImGui.Indent()
-			for key, value in pairs(object) do
-				func(key, value)
-			end
-			ImGui.Unindent()
-			ImGui.Unindent()
-		end
-	else
-		self:ObjectToText(name, object)
-	end
-end
-
--- Draws a Vector4 to the window given the vector4 name and the vector itself
-function Inspector:DisplayVector4(vectorName, vector4) 
-	ImGui.PushID(vectorName .. self.UniqueID)
-    self:DrawNodeTree(vectorName, "Vector4", vector4, 
-		function() 
-            self:ObjectToText("X", vector4.x)
-			self:ObjectToText("Y", vector4.y)
-			self:ObjectToText("Z", vector4.z)
-            self:ObjectToText("W", vector4.w)
-        end
-	)
-	ImGui.PopID()
-end
-
--- Draws a TreeNode given certain information
-function Inspector:DrawNodeTree(name, className, object, func)
-	ImGui.PushID(name .. className .. self.UniqueID)
-	if object ~= nil then 
-		if self:TextToTreeNode(name .. " - " .. className) then 
-			func(object)
-			ImGui.Separator()
-			ImGui.Unindent()
-		end
-	else
-		self:ObjectToText(name, object)
-	end
-	ImGui.PopID()
-end
-
 -- Draws the filter input
 function Inspector:DrawFilterInput()
-	text, selected = ImGui.InputTextMultiline("Top Level Filter", self.FilterText, 100, 200, 20)
-	if selected then self.FilterText = text end
-end
-
--- Draws a ImGui tree node to the window
-function Inspector:TextToTreeNode(text)
-	ImGui.PushID(text .. self.UniqueID)
-	local open = (self.FilterText == "" or text:BMContains(self.FilterText) ~= nil) and ImGui.TreeNode(text) 
-	ImGui.PopID()
-	return open
-end
-
--- Draws a ImGui text to the window
-function Inspector:ObjectToText(ObjectName, object)
-	ImGui.PushID(ObjectName .. self.UniqueID)
-	local text = ObjectName .. ": " .. tostring(object)
-	if self.FilterText == "" or text:BMContains(self.FilterText) ~= nil then
-		ImGui.Text(text)
-	end
-	ImGui.PopID()
+	text, selected = ImGui.InputTextMultiline("Top Level Filter", BradenMenu.FilterText, 100, 200, 20)
+	if selected then BradenMenu.FilterText = text end
 end
 
 function Inspector:DrawNoEntity()

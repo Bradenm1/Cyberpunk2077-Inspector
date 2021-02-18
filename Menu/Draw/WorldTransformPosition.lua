@@ -4,21 +4,21 @@ function Inspector.DrawWorldTransformPosition(self, worldPosition)
 	-- Static Functions
 	local worldPositionSingleton = GetSingleton("WorldPosition")
 
-	self:ObjectToText("GetX", worldPositionSingleton:GetX(worldPosition))
-	self:ObjectToText("GetY", worldPositionSingleton:GetY(worldPosition))
-	self:ObjectToText("GetZ", worldPositionSingleton:GetZ(worldPosition))
+	BradenMenu.IGE.ObjectToText("GetX", worldPositionSingleton:GetX(worldPosition))
+	BradenMenu.IGE.ObjectToText("GetY", worldPositionSingleton:GetY(worldPosition))
+	BradenMenu.IGE.ObjectToText("GetZ", worldPositionSingleton:GetZ(worldPosition))
 
-	self:DisplayVector4("ToVector4", worldPositionSingleton:ToVector4(worldPosition)) 
+	BradenMenu.IGE.DisplayVector4("ToVector4", worldPositionSingleton:ToVector4(worldPosition)) 
 	ImGui.Unindent()
 
 	-- Properties
-	self:DrawNodeTree("X", "FixedPoint", worldPosition.x, 
+	BradenMenu.IGE.DrawNodeTree("X", "FixedPoint", worldPosition.x, 
 		function(fixedPoint) self:DrawFixedPoint(fixedPoint) end
 	)
-	self:DrawNodeTree("Y", "FixedPoint", worldPosition.y, 
+	BradenMenu.IGE.DrawNodeTree("Y", "FixedPoint", worldPosition.y, 
 		function(fixedPoint) self:DrawFixedPoint(fixedPoint) end
 	)
-	self:DrawNodeTree("Z", "FixedPoint", worldPosition.z, 
+	BradenMenu.IGE.DrawNodeTree("Z", "FixedPoint", worldPosition.z, 
 		function(fixedPoint) self:DrawFixedPoint(fixedPoint) end
 	)
 

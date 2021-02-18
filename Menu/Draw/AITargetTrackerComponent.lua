@@ -1,11 +1,11 @@
 function Inspector.DrawAITargetTrackerComponent(self, AITargetTrackerComponent)
 	ImGui.Indent()
 
-	self:ObjectToText("ToString", AITargetTrackerComponent:ToString())
+	BradenMenu.IGE.ObjectToText("ToString", AITargetTrackerComponent:ToString())
 
-	self:DisplayObjectArray("GetThreats", "AITrackedLocation", AITargetTrackerComponent:GetThreats(false),
+	BradenMenu.IGE.DisplayObjectArray("GetThreats", "AITrackedLocation", AITargetTrackerComponent:GetThreats(false),
 		function(key, value) 
-			if self:TextToTreeNode("GetThreats - AITrackedLocation - " .. key) then 
+			if BradenMenu.IGE.TextToTreeNode("GetThreats - AITrackedLocation - " .. key) then 
 				ImGui.Indent()
 				self:DrawAITrackedLocation(value)
 				ImGui.Unindent()
@@ -14,9 +14,9 @@ function Inspector.DrawAITargetTrackerComponent(self, AITargetTrackerComponent)
 		end
 	)
 
-	self:DisplayObjectArray("GetHostileThreats", "AITrackedLocation", AITargetTrackerComponent:GetHostileThreats(false),
+	BradenMenu.IGE.DisplayObjectArray("GetHostileThreats", "AITrackedLocation", AITargetTrackerComponent:GetHostileThreats(false),
 		function(key, value) 
-			if self:TextToTreeNode("GetHostileThreats - AITrackedLocation - " .. key) then 
+			if BradenMenu.IGE.TextToTreeNode("GetHostileThreats - AITrackedLocation - " .. key) then 
 				ImGui.Indent()
 				self:DrawAITrackedLocation(value)
 				ImGui.Unindent()
@@ -29,7 +29,7 @@ function Inspector.DrawAITargetTrackerComponent(self, AITargetTrackerComponent)
 	if atTargetComp ~= nil then 
 		self:DrawAITrackedLocation(atTargetComp)
 	else
-		self:ObjectToText("GetTopHostileThreat", atTargetComp)
+		BradenMenu.IGE.ObjectToText("GetTopHostileThreat", atTargetComp)
 	end
 
 	ImGui.Unindent()

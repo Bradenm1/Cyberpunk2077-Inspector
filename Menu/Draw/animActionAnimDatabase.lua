@@ -1,11 +1,11 @@
 function Inspector.DrawanimActionAnimDatabase(self, animActionAnimDatabase)
-    self:DisplayObjectArray("rows", "animActionAnimDatabase_DatabaseRow", animActionAnimDatabase.rows,
+    BradenMenu.IGE.DisplayObjectArray("rows", "animActionAnimDatabase_DatabaseRow", animActionAnimDatabase.rows,
             function(key, value) 
-                self:ObjectToText("animFeatureName", value.animFeatureName)
-                self:ObjectToText("state", value.state)
-                self:ObjectToText("animVariation", value.animVariation)
-                self:ObjectToText("animationData", value.animationData)
+                BradenMenu.IGE.ObjectToText("animFeatureName", value.animFeatureName)
+                BradenMenu.IGE.ObjectToText("state", value.state)
+                BradenMenu.IGE.ObjectToText("animVariation", value.animVariation)
+                BradenMenu.IGE.ObjectToText("animationData", value.animationData)
             end
 		)
-    self:ObjectToText("cookingPlatform", animActionAnimDatabase.cookingPlatform)
+    BradenMenu.IGE.ObjectToText("cookingPlatform", animActionAnimDatabase.cookingPlatform)
 end

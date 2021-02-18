@@ -2,45 +2,45 @@ function Inspector.DrawentEntity(self, entity)
 	ImGui.Indent()
 
 	-- Functions
-	self:DrawNodeTree("GetEntityID", "entEntityID", entity:GetEntityID(), 
+	BradenMenu.IGE.DrawNodeTree("GetEntityID", "entEntityID", entity:GetEntityID(), 
 		function(entEntityID)  self:DrawentEntityID(entEntityID) end
 	)
 	
-	self:ObjectToText("GetControllingPeerID", entity:GetControllingPeerID())
+	BradenMenu.IGE.ObjectToText("GetControllingPeerID", entity:GetControllingPeerID())
 	--ImGui.Text("CurrentAppearanceName: " .. tostring(entity:GetCurrentAppearanceName())::GetCNameName())
 	self:DrawWindowCName("GetCurrentAppearanceName", entity:GetCurrentAppearanceName())
 	self:DrawWindowCName("GetCurrentContext", entity:GetCurrentContext())
-	self:ObjectToText("GetControllingPeerID", entity:GetControllingPeerID())
-	self:ObjectToText("GetWorldOrientation", entity:GetWorldOrientation())
-	self:DisplayVector4("GetWorldForward", entity:GetWorldForward())
-	self:DisplayVector4("GetWorldPosition", entity:GetWorldPosition())
-	self:DisplayVector4("GetWorldRight", entity:GetWorldRight())
-	self:DisplayVector4("GetWorldUp", entity:GetWorldUp())
-	self:ObjectToText("GetWorldYaw", entity:GetWorldYaw())
+	BradenMenu.IGE.ObjectToText("GetControllingPeerID", entity:GetControllingPeerID())
+	BradenMenu.IGE.ObjectToText("GetWorldOrientation", entity:GetWorldOrientation())
+	BradenMenu.IGE.DisplayVector4("GetWorldForward", entity:GetWorldForward())
+	BradenMenu.IGE.DisplayVector4("GetWorldPosition", entity:GetWorldPosition())
+	BradenMenu.IGE.DisplayVector4("GetWorldRight", entity:GetWorldRight())
+	BradenMenu.IGE.DisplayVector4("GetWorldUp", entity:GetWorldUp())
+	BradenMenu.IGE.ObjectToText("GetWorldYaw", entity:GetWorldYaw())
 
-	self:DrawNodeTree("GetWorldTransform", "WorldTransform", entity:GetWorldTransform(), 
+	BradenMenu.IGE.DrawNodeTree("GetWorldTransform", "WorldTransform", entity:GetWorldTransform(), 
 		function(worldTransform)  self:DrawWorldTransform(worldTransform) end
 	)
 
 	--self:AddConpoment(entity:GetWorldTransform())
-	self:ObjectToText("IsAttached", entity:IsAttached()) -- Good way to tell if object has been deleted!
-	self:ObjectToText("IsControlledByAnotherClient", entity:IsControlledByAnotherClient())
-	self:ObjectToText("IsControlledByAnyPeer", entity:IsControlledByAnyPeer())
-	self:ObjectToText("IsControlledByLocalPeer", entity:IsControlledByLocalPeer())
-	self:ObjectToText("ShouldEnableRemoteLayer", entity:ShouldEnableRemoteLayer())
-	self:ObjectToText("HasDirectActionsActive", entity:HasDirectActionsActive())
-	self:ObjectToText("CanRevealRemoteActionsWheel", entity:CanRevealRemoteActionsWheel())
-	self:ObjectToText("ShouldRegisterToHUD", entity:ShouldRegisterToHUD())
-	self:ObjectToText("GetIsIconic", entity:GetIsIconic())
-	self:ObjectToText("GetContentScale", entity:GetContentScale())
-	self:ObjectToText("IsExplosive", entity:IsExplosive())
-	self:ObjectToText("IsFastTravelPoint", entity:IsFastTravelPoint())
-	self:ObjectToText("HasAnySlaveDevices", entity:HasAnySlaveDevices())
-	self:ObjectToText("IsBodyDisposalPossible", entity:IsBodyDisposalPossible())
-	self:ObjectToText("IsReplicated", entity:IsReplicated())
+	BradenMenu.IGE.ObjectToText("IsAttached", entity:IsAttached()) -- Good way to tell if object has been deleted!
+	BradenMenu.IGE.ObjectToText("IsControlledByAnotherClient", entity:IsControlledByAnotherClient())
+	BradenMenu.IGE.ObjectToText("IsControlledByAnyPeer", entity:IsControlledByAnyPeer())
+	BradenMenu.IGE.ObjectToText("IsControlledByLocalPeer", entity:IsControlledByLocalPeer())
+	BradenMenu.IGE.ObjectToText("ShouldEnableRemoteLayer", entity:ShouldEnableRemoteLayer())
+	BradenMenu.IGE.ObjectToText("HasDirectActionsActive", entity:HasDirectActionsActive())
+	BradenMenu.IGE.ObjectToText("CanRevealRemoteActionsWheel", entity:CanRevealRemoteActionsWheel())
+	BradenMenu.IGE.ObjectToText("ShouldRegisterToHUD", entity:ShouldRegisterToHUD())
+	BradenMenu.IGE.ObjectToText("GetIsIconic", entity:GetIsIconic())
+	BradenMenu.IGE.ObjectToText("GetContentScale", entity:GetContentScale())
+	BradenMenu.IGE.ObjectToText("IsExplosive", entity:IsExplosive())
+	BradenMenu.IGE.ObjectToText("IsFastTravelPoint", entity:IsFastTravelPoint())
+	BradenMenu.IGE.ObjectToText("HasAnySlaveDevices", entity:HasAnySlaveDevices())
+	BradenMenu.IGE.ObjectToText("IsBodyDisposalPossible", entity:IsBodyDisposalPossible())
+	BradenMenu.IGE.ObjectToText("IsReplicated", entity:IsReplicated())
 
 	if entity:IsPlayer() then
-		self:DisplayObjectArray("GetPlayerCurrentWorkspotTags", "CName", entity:GetPlayerCurrentWorkspotTags(),
+		BradenMenu.IGE.DisplayObjectArray("GetPlayerCurrentWorkspotTags", "CName", entity:GetPlayerCurrentWorkspotTags(),
 			function(key, value) self:DrawWindowCName("Tag", value)end
 		)
 	end
@@ -49,11 +49,11 @@ function Inspector.DrawentEntity(self, entity)
 	
 	--[[
 	if entity.statesComponent ~= nil then 
-		self:ObjectToText("regularRecordID", entity.statesComponent.regularRecordID)
-		self:ObjectToText("highLevelAnimFeatureName", entity.statesComponent.highLevelAnimFeatureName)
-		self:ObjectToText("upperBodyAnimFeatureName", entity.statesComponent.upperBodyAnimFeatureName)
-		self:ObjectToText("stanceAnimFeatureName", entity.statesComponent.stanceAnimFeatureName)
-		self:ObjectToText("name", entity.statesComponent.name)
+		BradenMenu.IGE.ObjectToText("regularRecordID", entity.statesComponent.regularRecordID)
+		BradenMenu.IGE.ObjectToText("highLevelAnimFeatureName", entity.statesComponent.highLevelAnimFeatureName)
+		BradenMenu.IGE.ObjectToText("upperBodyAnimFeatureName", entity.statesComponent.upperBodyAnimFeatureName)
+		BradenMenu.IGE.ObjectToText("stanceAnimFeatureName", entity.statesComponent.stanceAnimFeatureName)
+		BradenMenu.IGE.ObjectToText("name", entity.statesComponent.name)
 	end]]
 
 	ImGui.Unindent()

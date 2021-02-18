@@ -1,0 +1,35 @@
+{
+	name: CrowdMemberBaseComponent,
+	functions: {
+		ChangeMoveType(name: CName) => (Bool),
+		IsInCrowd() => (Bool),
+		SetThreatLastKnownPosition(position: Vector4),
+		TryChangeMovementDirection(),
+		TryStopTrafficMovement(),
+		GetMovementDirection() => (Vector4),
+		ChangeFearStage(stage: gameFearStage, playInitAniation: Bool) => (Bool),
+		CheckEmptyPath(distance: Float) => (Bool),
+		CheckIsMoving() => (Bool),
+		AllowWorkspotsUsage(allowUsage: Bool),
+		OnCrowdReaction(stimType: gamedataStimType),
+		GetEntity() => (whandle:entEntity),
+		FindComponentByName(componentName: CName) => (whandle:entIComponent),
+		GetName() => (CName),
+		IsEnabled() => (Bool),
+		Toggle(on: Bool),
+		QueueEntityEvent(ev: handle:redEvent),
+		RegisterRenderDebug(filterName: String, functionName: CName),
+		ToString() => (String),
+		GetClassName() => (CName),
+		IsA(className: CName) => (Bool),
+		IsExactlyA(className: CName) => (Bool),
+	},
+	staticFunctions: {
+		DetectScriptableCycles(),
+	},
+	properties: {
+		name: CName,
+		isReplicable: Bool,
+		id: CRUID,
+	}
+}

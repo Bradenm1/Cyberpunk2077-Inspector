@@ -2,44 +2,44 @@ function Inspector.DrawGamePuppet(self, entity)
 	ImGui.Indent()
 
 	-- Functions
-	self:ObjectToText("CanRagdoll" , entity:CanRagdoll())
-	self:ObjectToText("GetTweakDBDisplayName", entity:GetTweakDBDisplayName(false))
-	self:ObjectToText("GetTweakDBFullDisplayName", entity:GetTweakDBFullDisplayName(false))
-	--[[self:ObjectToText("GetTweakDBDisplayName FallBack", entity:GetTweakDBDisplayName(true))
-	self:ObjectToText("GetTweakDBFullDisplayName FallBack", entity:GetTweakDBFullDisplayName(true))]]
-	self:DrawNodeTree("GetAttitude", "gameAttitudeAgent", entity:GetAttitude(), 
+	BradenMenu.IGE.ObjectToText("CanRagdoll" , entity:CanRagdoll())
+	BradenMenu.IGE.ObjectToText("GetTweakDBDisplayName", entity:GetTweakDBDisplayName(false))
+	BradenMenu.IGE.ObjectToText("GetTweakDBFullDisplayName", entity:GetTweakDBFullDisplayName(false))
+	--[[BradenMenu.IGE.ObjectToText("GetTweakDBDisplayName FallBack", entity:GetTweakDBDisplayName(true))
+	BradenMenu.IGE.ObjectToText("GetTweakDBFullDisplayName FallBack", entity:GetTweakDBFullDisplayName(true))]]
+	BradenMenu.IGE.DrawNodeTree("GetAttitude", "gameAttitudeAgent", entity:GetAttitude(), 
 		function(gameAttitudeAgent)  self:DrawgameAttitudeAgent(gameAttitudeAgent) end
 	)
 
-	self:DrawNodeTree("GetRecord", "gameDataCharacter_Record", entity:GetRecord(), 
+	BradenMenu.IGE.DrawNodeTree("GetRecord", "gameDataCharacter_Record", entity:GetRecord(), 
 		function(gameDataCharacter_Record)  self:DrawgameDataCharacter_Record(gameDataCharacter_Record) end
 	)
 
-	self:DrawNodeTree("GetMovePolicesComponent", "movePoliciesComponent", entity:GetMovePolicesComponent(), 
+	BradenMenu.IGE.DrawNodeTree("GetMovePolicesComponent", "movePoliciesComponent", entity:GetMovePolicesComponent(), 
 		function(movePoliciesComponent)  self:DrawmovePoliciesComponent(movePoliciesComponent) end
 	)
 
 	local someBool, objects = entity:GetCurrentlyEquippedItems()
-	self:DisplayObjectArray("GetCurrentlyEquippedItems", "gameItemObject", objects,
+	BradenMenu.IGE.DisplayObjectArray("GetCurrentlyEquippedItems", "gameItemObject", objects,
 		function(key, value) self:DrawgameItemObject("gameItemObject", value)end
 	)
 
-	self:DrawNodeTree("GetAnimationControllerComponent", "entAnimationControllerComponent", entity:GetAnimationControllerComponent(), 
+	BradenMenu.IGE.DrawNodeTree("GetAnimationControllerComponent", "entAnimationControllerComponent", entity:GetAnimationControllerComponent(), 
 		function(entAnimationControllerComponent)  self:DrawentAnimationControllerComponent(entAnimationControllerComponent) end
 	)
 
 	self:DrawWindowCName("GetGender", entity:GetGender())
 	self:DrawWindowCName("GetBodyType", entity:GetBodyType())
-	self:DisplayVector4("GetLastValidNavmeshPoint", entity:GetLastValidNavmeshPoint()) 
+	BradenMenu.IGE.DisplayVector4("GetLastValidNavmeshPoint", entity:GetLastValidNavmeshPoint()) 
 	self:DrawWindowCName("GetResolvedGenderName", entity:GetResolvedGenderName())
-	self:DisplayVector4("GetVelocity", entity:GetVelocity()) 
-	self:ObjectToText("HasCPOMissionData" , entity:HasCPOMissionData())
-	self:ObjectToText("HasCrowdStaticLOD" , entity:HasCrowdStaticLOD())
-	self:ObjectToText("IsLooted" , entity:IsLooted())
-	self:ObjectToText("WasLootGenerated" , entity:WasLootGenerated())
-	self:ObjectToText("IsPlayerAround", entity:IsPlayerAround())
-	self:ObjectToText("GetICELevel", entity:GetICELevel())
-	self:ObjectToText("GetPingDuration", entity:GetPingDuration())
+	BradenMenu.IGE.DisplayVector4("GetVelocity", entity:GetVelocity()) 
+	BradenMenu.IGE.ObjectToText("HasCPOMissionData" , entity:HasCPOMissionData())
+	BradenMenu.IGE.ObjectToText("HasCrowdStaticLOD" , entity:HasCrowdStaticLOD())
+	BradenMenu.IGE.ObjectToText("IsLooted" , entity:IsLooted())
+	BradenMenu.IGE.ObjectToText("WasLootGenerated" , entity:WasLootGenerated())
+	BradenMenu.IGE.ObjectToText("IsPlayerAround", entity:IsPlayerAround())
+	BradenMenu.IGE.ObjectToText("GetICELevel", entity:GetICELevel())
+	BradenMenu.IGE.ObjectToText("GetPingDuration", entity:GetPingDuration())
 
 	ImGui.Unindent()
 end

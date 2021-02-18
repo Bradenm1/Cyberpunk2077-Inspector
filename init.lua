@@ -22,12 +22,8 @@
 -- Load some global functions
 require("Menu/Misc/String")
 require("Menu/Misc/Game")
-UniqueIDObject = require("Menu/Misc/UniqueID"):new()
 
-BradenMenu = {
-	rootPath = "Cyberpunk2077-Inspector.",
-	description = "Tool used for Inspecting Entities among other things."
-}
+BradenMenu = {}
 
 -- Load within the BradenMenu class
 require("Menu/Draw/GlobalGameFunctions")
@@ -38,17 +34,28 @@ function BradenMenu:new()
 	self.__index = self
 
 	-- Register vars
-	self.DrawUI = false
-	self.AlwaysShow = false
-	self.AutoRemoveNilEntries = true
-	self.ShowInspectors = false
-	self.PrintErrors = true
-	self.DumpClassName = "NPCPuppet" -- Class to dump
-	self.SavedEntites = {} -- The entities the user has saved for the session
-	self.SavedConpoments = {}
-	self.OpenedInspectorWindows = {}
-	self.UniqueID = UniqueIDObject:GetNextID()
+	self.rootPath = "Cyberpunk2077-Inspector."
+	self.description = "Tool used for Inspecting Entities among other things."
+
+	-- Do local requires
+	self.IGE = require("Menu/Misc/ImGuiExtension")
+	self.UniqueIDObject = require("Menu/Misc/UniqueID"):new()
 	self.Inspector = require("Menu/Inspector.lua"):new(self, nil, "Targeted") -- Load and init this module class
+
+	-- Inspector related vars
+	self.DrawUI = false
+	self.SavedEntites = {} -- The entities the user has saved for the session
+	self.OpenedInspectorWindows = {}
+	self.FilterText = "" -- The text to filter in the inspector windows
+
+	-- Dump vars
+	self.DumpClassName = "NPCPuppet" -- Class to dump
+
+	-- Setting Vars
+	self.PrintErrors = true
+	self.AlwaysShow = false
+	self.ShowInspectors = false
+	self.AutoRemoveNilEntries = true
 
 	-- Register the callbacks
 	self:RegisterCallbacks()
@@ -137,8 +144,8 @@ function BradenMenu:DrawMainWindowTabs()
 	if ImGui.BeginTabBar("TabBar") then 
 		if (ImGui.BeginTabItem("Main")) then
 			ImGui.Spacing()
-
-			BradenMenu:DrawToggleInspectorWindow()
+			
+			self:DrawToggleInspectorWindow()
 
 			if ImGui.Button("Close All Entity Inspector Windows") then
 				self.OpenedInspectorWindows = {}
@@ -146,9 +153,6 @@ function BradenMenu:DrawMainWindowTabs()
 			
 			-- Draw the saved entites
 			self:DrawSavedEntites()
-			
-			-- Draw the saved conpoments
-			--self:DrawSavedConpoments()
 			
 			ImGui.EndTabItem()
 		end
@@ -324,38 +328,6 @@ function BradenMenu:DumpClass(className)
 	file:write(tostring(dump))
 	file:close()
 end
-
---[[
--- Display saved conponments
-function BradenMenu:DrawSavedConpoments()
-	ImGui.Text("Saved Conpoments -")
-	ImGui.Indent()
-	for key, value in pairs(self.SavedConpoments) do
-		if (value ~= nil) then 
-			if ImGui.CollapsingHeader(key, ImGuiTreeNodeFlags.Selected) then 
-				ImGui.Indent()
-				if ImGui.Button("Remove Entry") then 
-					self.SavedConpoments[key] = nil 
-				end
-				ImGui.Unindent()
-			end
-		end
-	end
-	ImGui.Unindent()
-end
-
-function BradenMenu:AddConpoment(comp) 
-	if comp ~= nil then 
-		if self:TextToTreeNode("Save Component") then 
-			local text, selected = ImGui.InputTextMultiline("Cache Name", self.SavedEntityCacheTextName, 100, 200, 20)
-			if selected then self.SavedEntityCacheTextName = text end
-			if ImGui.Button("Save Component") then 
-				self.SavedConpoments[self.SavedEntityCacheTextName] = comp
-			end
-			ImGui.Unindent()
-		end
-	end
-end]]
 
 -- End of BradenMenu Class
 

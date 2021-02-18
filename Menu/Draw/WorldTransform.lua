@@ -4,19 +4,19 @@ function Inspector.DrawWorldTransform(self, worldTransform)
 	local worldSingleton = GetSingleton("WorldTransform")
 
 	-- Static Functions
-	self:DrawNodeTree("GetWorldPosition", "WorldPosition", worldSingleton:GetWorldPosition(worldTransform), 
+	BradenMenu.IGE.DrawNodeTree("GetWorldPosition", "WorldPosition", worldSingleton:GetWorldPosition(worldTransform), 
 		function(worldPosition)  self:DrawWorldTransformPosition(worldPosition) end
 	)
 
-	self:DrawNodeTree("GetInverse", "WorldTransform", worldSingleton:GetInverse(worldTransform), 
+	BradenMenu.IGE.DrawNodeTree("GetInverse", "WorldTransform", worldSingleton:GetInverse(worldTransform), 
 		function(worldTransform)  self:DrawWorldTransform(worldTransform) end
 	)
 
-	self:ObjectToText("GetOrientation: ", worldSingleton:GetOrientation(worldTransform))
-	self:ObjectToText("GetForward", worldSingleton:GetForward(worldTransform))
-	self:ObjectToText("GetRight", worldSingleton:GetRight(worldTransform))
-	self:ObjectToText("GetUp", worldSingleton:GetUp(worldTransform))
-	self:ObjectToText("ToMatrix", worldSingleton:ToMatrix(worldTransform))
-	self:ObjectToText("_ToXForm", worldSingleton:_ToXForm(worldTransform))
+	BradenMenu.IGE.ObjectToText("GetOrientation: ", worldSingleton:GetOrientation(worldTransform))
+	BradenMenu.IGE.ObjectToText("GetForward", worldSingleton:GetForward(worldTransform))
+	BradenMenu.IGE.ObjectToText("GetRight", worldSingleton:GetRight(worldTransform))
+	BradenMenu.IGE.ObjectToText("GetUp", worldSingleton:GetUp(worldTransform))
+	BradenMenu.IGE.ObjectToText("ToMatrix", worldSingleton:ToMatrix(worldTransform))
+	BradenMenu.IGE.ObjectToText("_ToXForm", worldSingleton:_ToXForm(worldTransform))
 	ImGui.Unindent()
 end

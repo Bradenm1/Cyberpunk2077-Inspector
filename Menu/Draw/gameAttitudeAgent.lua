@@ -4,19 +4,19 @@ function Inspector.DrawgameAttitudeAgent(self, gameAttitudeAgent)
 	-- Functions
 	self:DrawWindowCName("GetAttitudeGroup", gameAttitudeAgent:GetAttitudeGroup())
 	
-	self:DrawNodeTree("GetPS", "gameComponentPS", gameAttitudeAgent:GetPS(), 
+	BradenMenu.IGE.DrawNodeTree("GetPS", "gameComponentPS", gameAttitudeAgent:GetPS(), 
 		function(ps) self:DrawgameAttitudeAgentPS(ps) end
 	)
 	
-	self:DrawNodeTree("GetBasePS", "gameComponentPS", gameAttitudeAgent:GetBasePS(), 
+	BradenMenu.IGE.DrawNodeTree("GetBasePS", "gameComponentPS", gameAttitudeAgent:GetBasePS(), 
 		function(basePS) self:DrawgameAttitudeAgentPS(basePS) end
 	)
 
-	self:DrawNodeTree("GetPersistentID", "gamePersistentID", gameAttitudeAgent:GetPersistentID(), 
+	BradenMenu.IGE.DrawNodeTree("GetPersistentID", "gamePersistentID", gameAttitudeAgent:GetPersistentID(), 
 		function(presistentID) self:DrawgamePersistentID(presistentID) end
 	)
 
-	self:DrawNodeTree("GetEntity", "entEntity", gameAttitudeAgent:GetEntity(), 
+	BradenMenu.IGE.DrawNodeTree("GetEntity", "entEntity", gameAttitudeAgent:GetEntity(), 
 		function(entity) self:DrawWindowEntityInspecterViewHasEntity(entity) end
 	)
 
@@ -25,11 +25,11 @@ function Inspector.DrawgameAttitudeAgent(self, gameAttitudeAgent)
 
 	-- Properties
 	self:DrawWindowCName("baseAttitudeGroup", gameAttitudeAgent.baseAttitudeGroup)
-	self:ObjectToText("presistentState: ", gameAttitudeAgent.presistentState)
 	self:DrawWindowCName("name", gameAttitudeAgent.name)
-	self:ObjectToText("isReplicable", gameAttitudeAgent.isReplicable)
-	self:ObjectToText("id", gameAttitudeAgent.id)
-	self:ObjectToText("ToString", gameAttitudeAgent.ToString)
+	BradenMenu.IGE.ObjectToText("presistentState: ", gameAttitudeAgent.presistentState)
+	BradenMenu.IGE.ObjectToText("isReplicable", gameAttitudeAgent.isReplicable)
+	BradenMenu.IGE.ObjectToText("id", gameAttitudeAgent.id)
+	BradenMenu.IGE.ObjectToText("ToString", gameAttitudeAgent.ToString)
 
 	ImGui.Unindent()
 end

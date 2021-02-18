@@ -2,34 +2,34 @@ function Inspector.DrawAITrackedLocation(self, AITrackedLocation)
 	ImGui.Indent()
 
 	-- Properties
-	self:DrawNodeTree("lastKown", "AILocationInformation", AITrackedLocation.lastKown,
+	BradenMenu.IGE.DrawNodeTree("lastKown", "AILocationInformation", AITrackedLocation.lastKown,
 		function(lastKown) self:DrawAILocationInformation(lastKown) end
 	)
 
-	self:DrawNodeTree("location", "AILocationInformation", AITrackedLocation.location,
+	BradenMenu.IGE.DrawNodeTree("location", "AILocationInformation", AITrackedLocation.location,
 		function(location) self:DrawAILocationInformation(location) end
 	)
 
-	self:DrawNodeTree("sharedLocation", "AILocationInformation", AITrackedLocation.sharedLocation,
+	BradenMenu.IGE.DrawNodeTree("sharedLocation", "AILocationInformation", AITrackedLocation.sharedLocation,
 		function(sharedLocation) self:DrawAILocationInformation(sharedLocation) end
 	)
 
-	self:DrawNodeTree("sharedLastKnown", "AILocationInformation", AITrackedLocation.sharedLastKnown,
+	BradenMenu.IGE.DrawNodeTree("sharedLastKnown", "AILocationInformation", AITrackedLocation.sharedLastKnown,
 		function(sharedLastKnown) self:DrawAILocationInformation(sharedLastKnown) end
 	)
 
-	self:DrawNodeTree("entity", "entEntity", AITrackedLocation.entity,
+	BradenMenu.IGE.DrawNodeTree("entity", "entEntity", AITrackedLocation.entity,
 		function(entity) self:DrawWindowEntityInspecterViewHasEntity(entity) end
 	)
 
-	self:ObjectToText("accuracy", AITrackedLocation.accuracy)
-	self:ObjectToText("sharedAccuracy", AITrackedLocation.sharedAccuracy)
-	self:ObjectToText("sharedTimeDelay", AITrackedLocation.sharedTimeDelay)
-	self:ObjectToText("threat", AITrackedLocation.threat)
-	self:DisplayVector4("speed", AITrackedLocation.speed)
-	self:ObjectToText("visible", AITrackedLocation.visible)
-	self:ObjectToText("invaildExpection", AITrackedLocation.invaildExpection)
-	self:ObjectToText("status", AITrackedLocation.status)
+	BradenMenu.IGE.ObjectToText("accuracy", AITrackedLocation.accuracy)
+	BradenMenu.IGE.ObjectToText("sharedAccuracy", AITrackedLocation.sharedAccuracy)
+	BradenMenu.IGE.ObjectToText("sharedTimeDelay", AITrackedLocation.sharedTimeDelay)
+	BradenMenu.IGE.ObjectToText("threat", AITrackedLocation.threat)
+	BradenMenu.IGE.DisplayVector4("speed", AITrackedLocation.speed)
+	BradenMenu.IGE.ObjectToText("visible", AITrackedLocation.visible)
+	BradenMenu.IGE.ObjectToText("invaildExpection", AITrackedLocation.invaildExpection)
+	BradenMenu.IGE.ObjectToText("status", AITrackedLocation.status)
 
 	ImGui.Unindent()
 end

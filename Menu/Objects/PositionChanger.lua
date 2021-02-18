@@ -5,14 +5,12 @@ function PositionChanger:new(entity)
 
 	-- All inspectors share these vars
 	o.Entity = entity
-	o.UniqueID = UniqueIDObject:GetNextID()
 	o.ValueSpeed = 0.01
 
 	o.FreezePosition = false
 
 	o.WorldPosition = Vector4.new(0,0,0,0)
 	o.EulerAngles = EulerAngles.new(0,0,0)
-
 	self.__index = self
    	return setmetatable(o, self)
 end
