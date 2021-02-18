@@ -275,14 +275,14 @@ function BradenMenu:DrawAllObjectsTab()
 		)
 	end
 
-	self.Inspector:DrawNodeTree("TSQ_ALL", "entEntity", {}, 
+	self.IGE.DrawNodeTree("TSQ_ALL", "entEntity", {}, 
 		function() 
 			self:DoActionAllObjects(
 				function(i, entity) 
 					local name = Game.NameToString(entity:GetDisplayName())
 					if name == "" then name = Game.NameToString(entity:GetCurrentAppearanceName()) end
-					if self.Inspector:TextToTreeNode(i .. " - entEntity - " .. name) then 
-						self.Inspector:DrawCacheEntityInput(entity)
+					if self.IGE.TextToTreeNode(i .. " - entEntity - " .. name) then 
+						self.IGE.DrawCacheEntityInput(entity)
 						ImGui.Unindent()
 					end 
 				end
