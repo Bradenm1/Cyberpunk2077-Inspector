@@ -1,21 +1,23 @@
-function Inspector.DrawAITrackedLocation(self, AITrackedLocation)
+local AITrackedLocation = {}
+
+function AITrackedLocation:Draw(AITrackedLocation)
 	ImGui.Indent()
 
 	-- Properties
 	BradenMenu.IGE.DrawNodeTree("lastKown", "AILocationInformation", AITrackedLocation.lastKown,
-		function(lastKown) self:DrawAILocationInformation(lastKown) end
+		function(lastKown) BradenMenu.AILocationInformation:Draw(lastKown) end
 	)
 
 	BradenMenu.IGE.DrawNodeTree("location", "AILocationInformation", AITrackedLocation.location,
-		function(location) self:DrawAILocationInformation(location) end
+		function(location) BradenMenu.AILocationInformation:Draw(location) end
 	)
 
 	BradenMenu.IGE.DrawNodeTree("sharedLocation", "AILocationInformation", AITrackedLocation.sharedLocation,
-		function(sharedLocation) self:DrawAILocationInformation(sharedLocation) end
+		function(sharedLocation) BradenMenu.AILocationInformation:Draw(sharedLocation) end
 	)
 
 	BradenMenu.IGE.DrawNodeTree("sharedLastKnown", "AILocationInformation", AITrackedLocation.sharedLastKnown,
-		function(sharedLastKnown) self:DrawAILocationInformation(sharedLastKnown) end
+		function(sharedLastKnown) BradenMenu.AILocationInformation:Draw(sharedLastKnown) end
 	)
 
 	BradenMenu.IGE.DrawNodeTree("entity", "entEntity", AITrackedLocation.entity,
@@ -33,3 +35,5 @@ function Inspector.DrawAITrackedLocation(self, AITrackedLocation)
 
 	ImGui.Unindent()
 end
+
+return AITrackedLocation

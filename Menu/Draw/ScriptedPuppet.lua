@@ -1,10 +1,12 @@
-function Inspector.DrawScriptedPuppet(self, entity)
+local ScriptedPuppet = {}
+
+function ScriptedPuppet:Draw(entity)
 	ImGui.Indent()
 
 	ImGui.Unindent()
 end
 
-function Inspector.DrawEditScriptedPuppet(self, entity)
+function ScriptedPuppet:DrawEdit(entity)
 	ImGui.Indent()
 	if ImGui.Button("RevokeAllTickets") then entity:RevokeAllTickets() end
 	if ImGui.Button("ResolveQualityRangeInteractionLayer") then entity:ResolveQualityRangeInteractionLayer() end
@@ -19,3 +21,5 @@ function Inspector.DrawEditScriptedPuppet(self, entity)
 	if ImGui.Button("AwardsExperience") then entity:AwardsExperience() end
 	ImGui.Unindent()
 end
+
+return ScriptedPuppet

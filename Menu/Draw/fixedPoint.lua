@@ -1,4 +1,6 @@
-function Inspector.DrawFixedPoint(self, fixedPoint)
+local FixedPoint = {}
+
+function FixedPoint:Draw(fixedPoint)
 	ImGui.Indent()
 
 	-- Properties
@@ -6,3 +8,5 @@ function Inspector.DrawFixedPoint(self, fixedPoint)
 
 	ImGui.Unindent()
 end
+
+return FixedPoint

@@ -1,4 +1,6 @@
-function Inspector.DrawentEntityID(self, entEntityID)
+local entEntityID = {}
+
+function entEntityID:Draw(entEntityID)
 	ImGui.Indent()
 
 	-- Properties
@@ -6,3 +8,5 @@ function Inspector.DrawentEntityID(self, entEntityID)
 
 	ImGui.Unindent()
 end
+
+return entEntityID

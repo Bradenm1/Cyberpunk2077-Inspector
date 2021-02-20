@@ -1,9 +1,13 @@
-function Inspector.DrawgameStatsBundleHandler(self, gameStatsBundleHandler)
+local gameStatsBundleHandler = {}
+
+function gameStatsBundleHandler:Draw(gameStatsBundleHandler)
 	ImGui.Indent()
 
 	BradenMenu.IGE.DisplayObjectArray("GetStatDetails", "gameStatDetailedData", gameStatsBundleHandler:GetStatDetails(),
-		function(key, value) self:DrawgameStatDetailedData("gameStatDetailedData", value) end
+		function(key, value) BradenMenu.gameStatDetailedData:Draw("gameStatDetailedData", value) end
 	)
 	
 	ImGui.Unindent()
 end
+
+return gameStatsBundleHandler

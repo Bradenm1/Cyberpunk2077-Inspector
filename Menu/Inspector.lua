@@ -1,4 +1,4 @@
-Inspector = {}
+local Inspector = {}
 
 --[[
 	Inspector Information:
@@ -7,44 +7,19 @@ Inspector = {}
 		This class also contains the code to run each inspector instance but without creating new objects for each one. 
 ]]
 
--- Fetch required files
-require("Menu/Draw/gameObject")
-require("Menu/Draw/gameDataCharacter_Record")
-require("Menu/Draw/gamePuppet")
-require("Menu/Draw/entEntity")
-require("Menu/Draw/gameAttitudeAgent")
-require("Menu/Draw/gameAttitudeAgentPS")
-require("Menu/Draw/CName")
-require("Menu/Draw/AITrackedLocation")
-require("Menu/Draw/AITargetTrackerComponent")
-require("Menu/Draw/gamedataNPCType_Record")
-require("Menu/Draw/movePoliciesComponent")
-require("Menu/Draw/WorldTransform")	
-require("Menu/Draw/WorldTransformPosition")
-require("Menu/Draw/AILocationInformation")
-require("Menu/Draw/fixedPoint")
-require("Menu/Draw/gamePersistentID")
-require("Menu/Draw/gameItemObject")
-require("Menu/Draw/entEntityID")
-require("Menu/Draw/ScriptedPuppet")
-require("Menu/Draw/vehicleCarBaseObject")
-require("Menu/Draw/gameUniqueItemData")
-require("Menu/Draw/gameStatDetailedData")
-require("Menu/Draw/gameStatsBundleHandler")
-require("Menu/Draw/animActionAnimDatabase")
-require("Menu/Draw/entAnimationControllerComponent")
-
 -- Constructor
 function Inspector:new(parent, entity, windowName)
 	local o = {} 
 
 	-- All inspectors share these vars
-    o.Parent = parent or {} -- The parent window
-    o.SavedEntityCacheTextName = "exampleName"
-	o.UniqueID = BradenMenu.UniqueIDObject:GetNextID()
+	o.Parent = parent or {} -- The parent window
 	o.Entity = entity
 	o.WindowName = windowName or "Targeted"
-	o.PositionChanger = require("Menu/Objects/PositionChanger"):new(entity)
+	o.SavedEntityCacheTextName = "exampleName"
+	o.SelectedAttitudeGroup = 1
+	o.SelectedReactionPreset = 1
+	o.PositionChanger = BradenMenu.PositionChangerModule:new(entity)
+	o.UniqueID = BradenMenu.UniqueIDObject:GetNextID()
 
 	self.__index = self
    	return setmetatable(o, self)
@@ -116,7 +91,7 @@ end
 -- Draw the View tab
 function Inspector:DrawViewTab(entity)
 	if (entity ~= nil) then
-		self:DrawWindowEntityInspecterViewHasEntity(entity)
+		BradenMenu.EntityInspect:Draw(entity, self)
 	else
 		self:DrawNoEntity()
 	end
@@ -125,7 +100,7 @@ end
 -- Draw the Edit tab
 function Inspector:DrawEditTab(entity)
 	if (entity ~= nil) then
-		self:DrawEditEntity(entity)
+		BradenMenu.EntityInspect:DrawEdit(entity, self)
 	else
 		self:DrawNoEntity()
 	end
@@ -146,81 +121,8 @@ function Inspector:DrawCacheEntityInput(entity)
 	text, selected = ImGui.InputTextMultiline("Name", self.SavedEntityCacheTextName, 100, 200, 20)
 	if selected then self.SavedEntityCacheTextName = text end
 	if ImGui.Button("Save") then 
-		self.Parent.SavedEntites[self.SavedEntityCacheTextName] = require("Menu/Inspector"):new(self.Parent, entity, self.SavedEntityCacheTextName)
+		self.Parent.SavedEntites[self.SavedEntityCacheTextName] = BradenMenu.InspectorModule:new(self.Parent, entity, self.SavedEntityCacheTextName)
 	end
-end
-
--- Draw the collapsing headers for the entity
-function Inspector:DrawWindowEntityInspecterViewHasEntity(entity)
-	-- Display information related to the Entity
-	if ImGui.CollapsingHeader("Entity") then
-		self:DrawentEntity(entity)
-	end
-
-	-- Display information related to the GameObject
-	if ImGui.CollapsingHeader("GameObject") then 
-		self:DrawGameObject(entity)
-	end
-
-	-- Display information related to the vehicleCarBaseObject
-	if entity:IsVehicle() then 
-		if ImGui.CollapsingHeader("vehicleCarBaseObject") then 
-
-		end
-	end
-
-	-- Display information related to the gamePuppet
-	if entity:IsNPC() or entity:IsPlayer() then 
-		if ImGui.CollapsingHeader("gamePuppet") then 
-			self:DrawGamePuppet(entity)
-		end
-	end
-
-	-- Display information related to the ScriptedPuppet
-	--[[if entity:IsPuppet() then
-		if ImGui.CollapsingHeader("ScriptedPuppet") then 
-			self:DrawScriptedPuppet(entity)
-		end
-	end]]
-
-	-- Display information related to a gameItemObject
-	if entity:IsItem() then
-		if ImGui.CollapsingHeader("gameItemObject") then 
-			self:DrawgameItemObject(entity)
-		end
-	end
-end
-
--- Draws all the edit functions
--- DODO: put this stuff in another file and separate it out
-function Inspector:DrawEditEntity(entity)
-	
-	if ImGui.CollapsingHeader("Entity", ImGuiTreeNodeFlags.Selected) then 
-		self:DrawEditentEntity(entity)
-	end
-	
-	if ImGui.CollapsingHeader("GameObject", ImGuiTreeNodeFlags.Selected) then 
-		self:DrawEditGameObject(entity)
-	end
-
-	if entity:IsVehicle() then 
-		if ImGui.CollapsingHeader("vehicleCarBaseObject", ImGuiTreeNodeFlags.Selected) then
-			self:DrawEditvehicleCarBaseObject(entity)
-		end
-	end
-
-	if entity:IsNPC() or entity:IsPlayer() then 
-		if ImGui.CollapsingHeader("gamePuppet", ImGuiTreeNodeFlags.Selected) then 	
-			self:DrawEditGamePuppet(entity)
-		end
-	end
-
-	if entity:IsPuppet() then
-		if ImGui.CollapsingHeader("ScriptedPuppet", ImGuiTreeNodeFlags.Selected) then 
-			self:DrawEditScriptedPuppet(entity)
-		end
-	end
-
 end
 
 -- Draws the filter input

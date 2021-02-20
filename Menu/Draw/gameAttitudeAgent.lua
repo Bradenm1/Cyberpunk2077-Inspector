@@ -1,31 +1,32 @@
-function Inspector.DrawgameAttitudeAgent(self, gameAttitudeAgent)
+local gameAttitudeAgent = {}
+
+function gameAttitudeAgent:Draw(gameAttitudeAgent)
 	ImGui.Indent()
 
 	-- Functions
-	self:DrawWindowCName("GetAttitudeGroup", gameAttitudeAgent:GetAttitudeGroup())
-	
+	BradenMenu.CName:Draw("GetAttitudeGroup", gameAttitudeAgent:GetAttitudeGroup())
 	BradenMenu.IGE.DrawNodeTree("GetPS", "gameComponentPS", gameAttitudeAgent:GetPS(), 
-		function(ps) self:DrawgameAttitudeAgentPS(ps) end
+		function(ps) BradenMenu.gameAttitudeAgentPS:Draw(ps) end
 	)
 	
 	BradenMenu.IGE.DrawNodeTree("GetBasePS", "gameComponentPS", gameAttitudeAgent:GetBasePS(), 
-		function(basePS) self:DrawgameAttitudeAgentPS(basePS) end
+		function(basePS) BradenMenu.gameAttitudeAgentPS:Draw(basePS) end
 	)
 
 	BradenMenu.IGE.DrawNodeTree("GetPersistentID", "gamePersistentID", gameAttitudeAgent:GetPersistentID(), 
-		function(presistentID) self:DrawgamePersistentID(presistentID) end
+		function(presistentID) BradenMenu.gamePersistentID:Draw(presistentID) end
 	)
 
 	BradenMenu.IGE.DrawNodeTree("GetEntity", "entEntity", gameAttitudeAgent:GetEntity(), 
-		function(entity) self:DrawWindowEntityInspecterViewHasEntity(entity) end
+		function(entity) BradenMenu.EntityInspect:Draw(entity) end
 	)
 
-	self:DrawWindowCName("GetName", gameAttitudeAgent:GetName())
-	self:DrawWindowCName("GetClassName", gameAttitudeAgent:GetClassName())
+	BradenMenu.CName:Draw("GetName", gameAttitudeAgent:GetName())
+	BradenMenu.CName:Draw("GetClassName", gameAttitudeAgent:GetClassName())
 
 	-- Properties
-	self:DrawWindowCName("baseAttitudeGroup", gameAttitudeAgent.baseAttitudeGroup)
-	self:DrawWindowCName("name", gameAttitudeAgent.name)
+	BradenMenu.CName:Draw("baseAttitudeGroup", gameAttitudeAgent.baseAttitudeGroup)
+	BradenMenu.CName:Draw("name", gameAttitudeAgent.name)
 	BradenMenu.IGE.ObjectToText("presistentState: ", gameAttitudeAgent.presistentState)
 	BradenMenu.IGE.ObjectToText("isReplicable", gameAttitudeAgent.isReplicable)
 	BradenMenu.IGE.ObjectToText("id", gameAttitudeAgent.id)
@@ -33,3 +34,5 @@ function Inspector.DrawgameAttitudeAgent(self, gameAttitudeAgent)
 
 	ImGui.Unindent()
 end
+
+return gameAttitudeAgent

@@ -1,4 +1,6 @@
-function Inspector.DrawAILocationInformation(self, AILocationInformation)
+local AILocationInformation = {}
+
+function AILocationInformation:Draw(AILocationInformation)
 	ImGui.Indent()
 
 	-- Properties
@@ -7,3 +9,5 @@ function Inspector.DrawAILocationInformation(self, AILocationInformation)
 
 	ImGui.Unindent()
 end
+
+return AILocationInformation

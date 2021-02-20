@@ -1,4 +1,6 @@
-function Inspector.DrawgamePersistentID(self, gamePersistentID)
+local gamePersistentID = {}
+
+function gamePersistentID:Draw(gamePersistentID)
 	ImGui.Indent()
 
 	-- Properties
@@ -7,3 +9,5 @@ function Inspector.DrawgamePersistentID(self, gamePersistentID)
 
 	ImGui.Unindent()
 end
+
+return gamePersistentID

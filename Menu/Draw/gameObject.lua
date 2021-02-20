@@ -1,4 +1,6 @@
-function Inspector.DrawGameObject(self, entity)
+local GameObject = {}
+
+function GameObject:Draw(entity)
 	ImGui.Indent()
 
 	-- Functions
@@ -6,24 +8,24 @@ function Inspector.DrawGameObject(self, entity)
 	BradenMenu.IGE.ObjectToText("GetTracedActionName" , entity:GetTracedActionName())
 
 	BradenMenu.IGE.DrawNodeTree("GetOwner", "entEntity", entity:GetOwner(), 
-		function(entityOwner)  self:DrawWindowEntityInspecterViewHasEntity(entityOwner) end
+		function(entityOwner)  BradenMenu.EntityInspect:Draw(entityOwner) end
 	)
 
-	if entity:IsNPC() then 
+	if entity:IsNPC() then
 		BradenMenu.IGE.DrawNodeTree("GetKiller", "entEntity", entity:GetKiller(), 
-			function(entityKiller) self:DrawWindowEntityInspecterViewHasEntity(entityKiller) end
+			function(entityKiller) BradenMenu.EntityInspect:Draw(entityKiller) end
 		)
 	end
 	
 	BradenMenu.IGE.DrawNodeTree("GetTargetTrackerComponent", "AITargetTrackerComponent", entity:GetTargetTrackerComponent(), 
-		function(trackerComponent) self:DrawAITargetTrackerComponent(trackerComponent) end
+		function(trackerComponent) BradenMenu.AITargetTrackerComponent:Draw(trackerComponent) end
 	)
 
 	local bool, items = GetSingleton('gameTransactionSystem'):GetItemList(entity)
 	BradenMenu.IGE.DisplayObjectArray("GetItemList", "gameUniqueItemData", items,
 		function(key, value) 
 			if BradenMenu.IGE.TextToTreeNode("GetItemList - gameUniqueItemData - " .. key .. " - " .. tostring(Game.NameToString(value:GetName()))) then 
-				self:DrawgameUniqueItemData(value)
+				BradenMenu.gameUniqueItemData:Draw(value)
 				ImGui.Unindent()
 			end 
 		end
@@ -108,10 +110,10 @@ function Inspector.DrawGameObject(self, entity)
 	BradenMenu.IGE.ObjectToText("IsVehicle" , entity:IsVehicle())
 	BradenMenu.IGE.ObjectToText("IsVRReplacer" , entity:IsVRReplacer())
 	BradenMenu.IGE.ObjectToText("CanOverrideNetworkContext" , entity:CanOverrideNetworkContext())
-	self:DrawWindowCName("GetNetworkLinkSlotName", entity:GetNetworkLinkSlotName()) -- Does not work with vehicles
-	self:DrawWindowCName("GetRoleMappinSlotName", entity:GetRoleMappinSlotName())
-	self:DrawWindowCName("GetQuickHackIndicatorSlotName", entity:GetQuickHackIndicatorSlotName())
-	self:DrawWindowCName("GetPhoneCallIndicatorSlotName", entity:GetPhoneCallIndicatorSlotName())
+	BradenMenu.CName:Draw("GetNetworkLinkSlotName", entity:GetNetworkLinkSlotName()) -- Does not work with vehicles
+	BradenMenu.CName:Draw("GetRoleMappinSlotName", entity:GetRoleMappinSlotName())
+	BradenMenu.CName:Draw("GetQuickHackIndicatorSlotName", entity:GetQuickHackIndicatorSlotName())
+	BradenMenu.CName:Draw("GetPhoneCallIndicatorSlotName", entity:GetPhoneCallIndicatorSlotName())
 	BradenMenu.IGE.DisplayVector4("GetNetworkBeamEndpoint", entity:GetNetworkBeamEndpoint()) 
 	BradenMenu.IGE.ObjectToText("ShouldSendGameAttachedEventToPS", entity:ShouldSendGameAttachedEventToPS())
 	BradenMenu.IGE.ObjectToText("GetContentScale", entity:GetContentScale())
@@ -120,7 +122,7 @@ function Inspector.DrawGameObject(self, entity)
 	ImGui.Unindent()
 end
 
-function Inspector.DrawEditGameObject(self, entity)
+function GameObject:DrawEdit(entity)
 	ImGui.Indent()
 	if ImGui.Button("RemoveAllItems") then GetSingleton('gameTransactionSystem'):RemoveAllItems(entity) end
 	if ImGui.Button("ClearAllSlots") then GetSingleton('gameTransactionSystem'):ClearAllSlots(entity) end
@@ -134,3 +136,5 @@ function Inspector.DrawEditGameObject(self, entity)
 	
 	ImGui.Unindent()
 end
+
+return GameObject

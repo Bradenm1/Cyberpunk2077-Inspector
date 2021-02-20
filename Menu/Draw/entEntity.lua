@@ -1,15 +1,17 @@
-function Inspector.DrawentEntity(self, entity)
+local entEntity = {}
+
+function entEntity:Draw(entity)
 	ImGui.Indent()
 
 	-- Functions
 	BradenMenu.IGE.DrawNodeTree("GetEntityID", "entEntityID", entity:GetEntityID(), 
-		function(entEntityID)  self:DrawentEntityID(entEntityID) end
+		function(entEntityID) BradenMenu.entEntityID:Draw(entEntityID) end
 	)
 	
 	BradenMenu.IGE.ObjectToText("GetControllingPeerID", entity:GetControllingPeerID())
 	--ImGui.Text("CurrentAppearanceName: " .. tostring(entity:GetCurrentAppearanceName())::GetCNameName())
-	self:DrawWindowCName("GetCurrentAppearanceName", entity:GetCurrentAppearanceName())
-	self:DrawWindowCName("GetCurrentContext", entity:GetCurrentContext())
+	BradenMenu.CName:Draw("GetCurrentAppearanceName", entity:GetCurrentAppearanceName())
+	BradenMenu.CName:Draw("GetCurrentContext", entity:GetCurrentContext())
 	BradenMenu.IGE.ObjectToText("GetControllingPeerID", entity:GetControllingPeerID())
 	BradenMenu.IGE.ObjectToText("GetWorldOrientation", entity:GetWorldOrientation())
 	BradenMenu.IGE.DisplayVector4("GetWorldForward", entity:GetWorldForward())
@@ -19,7 +21,7 @@ function Inspector.DrawentEntity(self, entity)
 	BradenMenu.IGE.ObjectToText("GetWorldYaw", entity:GetWorldYaw())
 
 	BradenMenu.IGE.DrawNodeTree("GetWorldTransform", "WorldTransform", entity:GetWorldTransform(), 
-		function(worldTransform)  self:DrawWorldTransform(worldTransform) end
+		function(worldTransform) BradenMenu.WorldTransform:Draw(worldTransform) end
 	)
 
 	--self:AddConpoment(entity:GetWorldTransform())
@@ -41,25 +43,25 @@ function Inspector.DrawentEntity(self, entity)
 
 	if entity:IsPlayer() then
 		BradenMenu.IGE.DisplayObjectArray("GetPlayerCurrentWorkspotTags", "CName", entity:GetPlayerCurrentWorkspotTags(),
-			function(key, value) self:DrawWindowCName("Tag", value)end
+			function(key, value) BradenMenu.CName:Draw("Tag", value) end
 		)
 	end
 
 	-- Variables
 	
-	--[[
+	
 	if entity.statesComponent ~= nil then 
 		BradenMenu.IGE.ObjectToText("regularRecordID", entity.statesComponent.regularRecordID)
 		BradenMenu.IGE.ObjectToText("highLevelAnimFeatureName", entity.statesComponent.highLevelAnimFeatureName)
 		BradenMenu.IGE.ObjectToText("upperBodyAnimFeatureName", entity.statesComponent.upperBodyAnimFeatureName)
 		BradenMenu.IGE.ObjectToText("stanceAnimFeatureName", entity.statesComponent.stanceAnimFeatureName)
 		BradenMenu.IGE.ObjectToText("name", entity.statesComponent.name)
-	end]]
+	end
 
 	ImGui.Unindent()
 end
 
-function Inspector.DrawEditentEntity(self, entity)
+function entEntity:DrawEdit(entity, inspector)
 	ImGui.Indent()
 	local idLayer = -13
 	local maxSpawn = 10
@@ -72,7 +74,7 @@ function Inspector.DrawEditentEntity(self, entity)
 	else
 		if ImGui.Button("Spawn Clone") then 
 			local lastSpawned = Game.GetPreventionSpawnSystem():RequestSpawn(entity:GetRecordID(), idLayer, Game.GetPlayer():GetWorldTransform())
-			self.Parent.SavedEntites["Spawned Clone"] = require("Menu/Inspector"):new(self.Parent, Game.FindEntityByID(lastSpawned), "Spawned Clone")
+			inspector.Parent.SavedEntites["Spawned Clone"] = BradenMenu.InspectorModule:new(inspector.Parent, Game.FindEntityByID(lastSpawned), "Spawned Clone")
 		end
 	end
 	ImGui.SameLine()
@@ -99,24 +101,8 @@ function Inspector.DrawEditentEntity(self, entity)
 	if ImGui.Button("CycleRandomAppearance") then entity:ScheduleAppearanceChange("") end
 	local gameGodModeSystem = GetSingleton('gameGodModeSystem')
 
-	-- Move somewhere else later
-	local godModeTable = {
-		{
-			name = "Invulnerable",
-			type = 0
-		},
-		{
-			name = "Immortal",
-			type = 1
-		},
-		{
-			name = "Mortal",
-			type = 3
-		},
-	}
-
 	-- Loop through the table for the different godmodes
-	for key, value in ipairs(godModeTable) do
+	for key, value in ipairs(BradenMenu.GodModeData) do
 		if (gameGodModeSystem:HasGodMode(entity:GetEntityID(), value.type)) then 
 			if ImGui.Button("Remove " .. value.name) then gameGodModeSystem:RemoveGodMode(entity:GetEntityID(), value.type, "") end
 		else
@@ -141,7 +127,9 @@ function Inspector.DrawEditentEntity(self, entity)
 		WorldTransform.Position = Game.GetPlayer():GetWorldTransform():GetWorldPosition()]]
 	end
 
-	self.PositionChanger:DrawPositionChanger()
+	inspector.PositionChanger:DrawPositionChanger()
 	
 	ImGui.Unindent()
 end
+
+return entEntity

@@ -1,4 +1,6 @@
-function Inspector.DrawmovePoliciesComponent(self, movePoliciesComponent)
+local movePoliciesComponent = {}
+
+function movePoliciesComponent:Draw(movePoliciesComponent)
 	ImGui.Indent()
 
 	-- Functons
@@ -16,8 +18,10 @@ function Inspector.DrawmovePoliciesComponent(self, movePoliciesComponent)
 	BradenMenu.IGE.ObjectToText("IsTopPolicyEvaluated", movePoliciesComponent:IsTopPolicyEvaluated())
 	BradenMenu.IGE.ObjectToText("IsDestinationCalculated", movePoliciesComponent:IsDestinationCalculated())
 	BradenMenu.IGE.ObjectToText("IsDestinationChanged", movePoliciesComponent:IsDestinationChanged())
-	self:DrawWindowCName("GetName", movePoliciesComponent:GetName())
+	BradenMenu.CName:Draw("GetName", movePoliciesComponent:GetName())
 	BradenMenu.IGE.ObjectToText("IsEnabled", movePoliciesComponent:IsEnabled())
 
 	ImGui.Unindent()
 end
+
+return movePoliciesComponent

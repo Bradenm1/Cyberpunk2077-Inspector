@@ -1,10 +1,12 @@
-function Inspector.DrawvehicleCarBaseObject(self, entity)
+local vehicleCarBaseObject = {}
+
+function vehicleCarBaseObject:Draw(entity)
 	ImGui.Indent()
 
 	ImGui.Unindent()
 end
 
-function Inspector.DrawEditvehicleCarBaseObject(self, entity)
+function vehicleCarBaseObject:DrawEdit(entity)
     ImGui.Indent()
     local vehController = entity:GetController()
     if ImGui.Button("Lights") then vehController:SetLightStrength(1, 10000000, 1) end
@@ -71,3 +73,5 @@ function Inspector.DrawEditvehicleCarBaseObject(self, entity)
 
     ImGui.Unindent()
 end
+
+return vehicleCarBaseObject

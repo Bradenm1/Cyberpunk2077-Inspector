@@ -1,4 +1,6 @@
-function Inspector.DrawWorldTransformPosition(self, worldPosition)
+local WorldTransformPosition = {}
+
+function WorldTransformPosition:Draw(worldPosition)
 	ImGui.Indent()
 
 	-- Static Functions
@@ -13,14 +15,16 @@ function Inspector.DrawWorldTransformPosition(self, worldPosition)
 
 	-- Properties
 	BradenMenu.IGE.DrawNodeTree("X", "FixedPoint", worldPosition.x, 
-		function(fixedPoint) self:DrawFixedPoint(fixedPoint) end
+		function(fixedPoint) BradenMenu.FixedPoint:Draw(fixedPoint) end
 	)
 	BradenMenu.IGE.DrawNodeTree("Y", "FixedPoint", worldPosition.y, 
-		function(fixedPoint) self:DrawFixedPoint(fixedPoint) end
+		function(fixedPoint) BradenMenu.FixedPoint:Draw(fixedPoint) end
 	)
 	BradenMenu.IGE.DrawNodeTree("Z", "FixedPoint", worldPosition.z, 
-		function(fixedPoint) self:DrawFixedPoint(fixedPoint) end
+		function(fixedPoint) BradenMenu.FixedPoint:Draw(fixedPoint) end
 	)
 
 	ImGui.Unindent()
 end
+
+return WorldTransformPosition

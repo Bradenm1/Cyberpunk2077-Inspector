@@ -25,308 +25,77 @@ require("Menu/Misc/Game")
 
 BradenMenu = {}
 
--- Load within the BradenMenu class
-require("Menu/Draw/GlobalGameFunctions")
-
 -- Constructor
 function BradenMenu:new()
 	setmetatable(BradenMenu, self)
 	self.__index = self
 
 	-- Register vars
-	self.rootPath = "Cyberpunk2077-Inspector."
-	self.description = "Tool used for Inspecting Entities among other things."
-
-	-- Do local requires
-	self.IGE = require("Menu/Misc/ImGuiExtension")
-	self.UniqueIDObject = require("Menu/Misc/UniqueID"):new()
-	self.Inspector = require("Menu/Inspector.lua"):new(self, nil, "Targeted") -- Load and init this module class
-
-	-- Inspector related vars
-	self.DrawUI = false
-	self.SavedEntites = {} -- The entities the user has saved for the session
-	self.OpenedInspectorWindows = {}
+	self.RootPath = "Cyberpunk2077-Inspector"
+	self.Description = "Tool used for Inspecting Entities among other things."
 	self.FilterText = "" -- The text to filter in the inspector windows
 
-	-- Dump vars
-	self.DumpClassName = "NPCPuppet" -- Class to dump
+	-- Cache
+	-- pcall is bugged, can't get it to work with modules and is pointless
+	self:ErrorHandler(function() self:LoadModules() end)
 
-	-- Setting Vars
-	self.PrintErrors = true
-	self.AlwaysShow = false
-	self.ShowInspectors = false
-	self.AutoRemoveNilEntries = true
-
+	self.UniqueIDObject = require("Menu/Misc/UniqueID"):new() -- UniqueID ID used with PushID to stop conflicts
+	self.DebugMenu = require("Menu/DebugMenu"):new()
+	
 	-- Register the callbacks
-	self:RegisterCallbacks()
+	self:ErrorHandler(function() self:RegisterCallbacks() end)
 
    return BradenMenu
 end
- 
+
+function BradenMenu:LoadModules()
+	-- Extension of ImGui
+	self.IGE = require("Menu/Misc/ImGuiExtension")
+
+	-- Class modules
+	self.InspectorModule = require("Menu/Inspector.lua")
+	self.PositionChangerModule = require("Menu/Objects/PositionChanger")
+
+	-- Data 
+	self.GodModeData = require("Menu/Data/GodModeData")
+	self.AttitudeGroups = require("Menu/Data/AttitudeGroups")
+	self.ReactionPresets = require("Menu/Data/ReactionPresets")
+	self.Components = require("Menu/Data/Components")
+
+	-- Load Components
+	for i, name in pairs(self.Components) do
+		BradenMenu[name] = require("Menu/Draw/" .. name)
+	end
+end
+
 -- Register the callbacks for this mod menu
 function BradenMenu:RegisterCallbacks() 
 
 	registerForEvent("onUpdate", function(deltaTime)
-		self:AlwaysRun()
+		self:ErrorHandler(function(deltaTime) self.DebugMenu:onUpdate(deltaTime) end)
 	end)
 
 	registerForEvent("onOverlayOpen", function()
-		if Game.GetPlayer() then 
-			self.SavedEntites["Player"] = require("Menu/Inspector.lua"):new(self, Game.GetPlayer(), "Player")
-		end
-		
-		-- Show the UI when Cyber Engine Tweaks closes
-		self.DrawUI = true
+		self:ErrorHandler(function() self.DebugMenu:onOverlayOpen() end)
     end)
     
 	registerForEvent("onOverlayClose", function()
-		-- Hide the UI when Cyber Engine Tweaks closes
-        self.DrawUI = false 
+		self:ErrorHandler(function() self.DebugMenu:onOverlayClose() end)
     end)
 
 	registerForEvent("onDraw", function()
-		if (self.AlwaysShow or self.DrawUI) then
-
-			-- Run the Draw Window function, also check if an error occured
-			local success, err = pcall(function () self:DrawWindow() end)
-
-			-- Log error to the Cyber Engine Tweaks console if error occured
-			if success == false and self.PrintErrors then
-				print(err)
-			end
-		end
+		self:ErrorHandler(function() self.DebugMenu:OnDraw() end)
 	end)
 end
 
-function BradenMenu:AlwaysRun()
-	if self.Inspector ~= nil and self.Inspector.PositionChanger ~= nil then
-		self.Inspector:RunAlways()
+function BradenMenu:ErrorHandler(func)
+	-- Run the function, also check if an error occured
+	local success, err = pcall(function () func() end)
+
+	-- Log error to the Cyber Engine Tweaks console if error occured
+	if success == false then
+		print(err)
 	end
-
-	for i, v in pairs(self.OpenedInspectorWindows) do
-		v:RunAlways()
-	end
-end
-
--- The draw function for drawning the window
-function BradenMenu:DrawWindow() 
-	ImGui.SetNextWindowPos(100, 500, ImGuiCond.FirstUseEver) -- set window position x, y
-	ImGui.SetNextWindowSize(600, 300, ImGuiCond.Appearing) -- set window size w, h
-	
-	-- Main Window
-	if ImGui.Begin("Debug Menu - Entity Inspector") then
-
-		-- Draw the tabs within the window
-		self:DrawMainWindowTabs()
-
-		if self.ShowInspectors then 
-			-- Draw the other open Entity windows
-			--self.Inspector:DrawEntityWindows()
-			ImGui.SetNextWindowSize(630, 700, ImGuiCond.Appearing)
-			if ImGui.Begin("Entity Inspector") then 
-				if ImGui.BeginTabBar("Inspector", ImGuiTabBarFlags.Reorderable) then 
-					-- Draw the main window
-					self.Inspector:DrawTab(nil, "Targeted") -- Draw main tab
-
-					for i, v in pairs(self.OpenedInspectorWindows) do
-						v:DrawTab()
-					end
-				end
-				ImGui.EndTabBar()
-			end
-		end
-
-	end
-	ImGui.End()
-end
-
-function BradenMenu:DrawMainWindowTabs()
-	if ImGui.BeginTabBar("TabBar") then 
-		if (ImGui.BeginTabItem("Main")) then
-			ImGui.Spacing()
-			
-			self:DrawToggleInspectorWindow()
-
-			if ImGui.Button("Close All Entity Inspector Windows") then
-				self.OpenedInspectorWindows = {}
-			end
-			
-			-- Draw the saved entites
-			self:DrawSavedEntites()
-			
-			ImGui.EndTabItem()
-		end
-
-		if (ImGui.BeginTabItem("All Objects In View")) then
-			ImGui.Spacing()
-			self:DrawAllObjectsTab()
-			ImGui.EndTabItem()
-		end
-
-		-- The game tab
-		if (ImGui.BeginTabItem("Game")) then
-			ImGui.Spacing()
-			self:DrawGlobalGameFunctionButtons()
-			ImGui.EndTabItem()
-		end
-
-		-- The debug
-		if (ImGui.BeginTabItem("Debug")) then
-			ImGui.Spacing()
-			self:DrawDebugTab()
-			ImGui.EndTabItem()
-		end
-
-
-		if (ImGui.BeginTabItem("Settings")) then
-			ImGui.Spacing()
-			self:DrawSettingsTab()
-			ImGui.EndTabItem()
-		end
-	end
-	ImGui.EndTabBar()
-end
-
--- Draw the toggle button for the inspector window
-function BradenMenu:DrawToggleInspectorWindow() 
-	value, pressed = ImGui.Checkbox("Toggle Inspector Window", self.ShowInspectors)
-	if pressed then 
-		self.ShowInspectors = value
-	end
-end
-
--- Draw the Settings tab
-function BradenMenu:DrawSettingsTab()
-	local value, pressed = ImGui.Checkbox("Always Show Windows", self.AlwaysShow)
-	if pressed then
-		self.AlwaysShow = value
-	end
-
-	ImGui.Spacing()
-	ImGui.Text("Turning this off will keep entity entries around even when destroyed.")
-	ImGui.Text("They can still be inspected but variables are cached don't exist anymore.")
-	value, pressed = ImGui.Checkbox("Auto Remove Nil Entries", self.AutoRemoveNilEntries)
-	if pressed then 
-		self.AutoRemoveNilEntries = value
-	end
-
-	value, pressed = ImGui.Checkbox("Print Errors", self.PrintErrors)
-	if pressed then 
-		self.PrintErrors = value
-	end
-
-	ImGui.Spacing()
-end
-
--- Display saved entites
-function BradenMenu:DrawSavedEntites()
-	ImGui.Text("Saved Entites - ")
-	ImGui.Indent()
-	for key, value in pairs(self.SavedEntites) do
-		if (value ~= nil) then 
-			if ImGui.CollapsingHeader(key) then 
-				ImGui.Indent()
-				ImGui.Text("Does Entity still exist: - " .. tostring(not Game:BMIsEntityNull(value.Entity)))
-				-- Check if it's already opened
-				if self.OpenedInspectorWindows[key] == nil then
-						if ImGui.Button("Open " .. key) then 
-							self.OpenedInspectorWindows[key] = value
-						end
-					else
-						if ImGui.Button("Close " .. key) then 
-							self.OpenedInspectorWindows[key] = nil
-						end
-					end
-
-					-- The remove button for deleting a entry and removing the inspector window
-					if key ~= "Player" and ImGui.Button("Remove " .. key) then 
-						self.OpenedInspectorWindows[key] = nil
-						self.SavedEntites[key] = nil 
-					end
-				ImGui.Unindent()
-			end
-
-			if self.AutoRemoveNilEntries == true and Game:BMIsEntityNull(value.Entity) then 
-				self.OpenedInspectorWindows[key] = nil
-				self.SavedEntites[key] = nil
-			end
-		end
-	end
-	ImGui.Unindent()
-end
-
--- Draw the the All Objects tab
-function BradenMenu:DrawAllObjectsTab()
-	if ImGui.Button("Destroy All") then
-		self:DoActionAllObjects(
-			function(i, entity) 
-				entity:GetEntity():Destroy(entity:GetEntity()) 
-			end
-		)
-	end
-
-	if ImGui.Button("Kill All") then
-		self:DoActionAllObjects(
-			function(i, entity) 
-				if (entity:IsNPC()) then 
-					entity:Kill(entity, false, false) 
-				end
-			end
-		)
-	end
-
-	self.IGE.DrawNodeTree("TSQ_ALL", "entEntity", {}, 
-		function() 
-			self:DoActionAllObjects(
-				function(i, entity) 
-					local name = Game.NameToString(entity:GetDisplayName())
-					if name == "" then name = Game.NameToString(entity:GetCurrentAppearanceName()) end
-					if self.IGE.TextToTreeNode(i .. " - entEntity - " .. name) then 
-						self.IGE.DrawCacheEntityInput(entity)
-						ImGui.Unindent()
-					end 
-				end
-			)
-		end
-	)
-end
-
--- Do an action on all the obectives in the players view
-function BradenMenu:DoActionAllObjects(func) 
-	local searchQuery = Game["TSQ_ALL;"]()
-	searchQuery.maxDistance = 10000
-	local success, parts = Game.GetTargetingSystem():GetTargetParts(Game.GetPlayer(), searchQuery, {})
-	if success then 
-		for i, v in ipairs(parts) do
-			local entity = v:GetComponent(v):GetEntity()
-			if entity then
-				func(i, entity) 
-			end
-		end
-	end
-end
-
--- Draw the the Debug tab
-function BradenMenu:DrawDebugTab()
-	ImGui.Text("Dumps information for a given class to the 'Dumps' directory within the mod.")
-	ImGui.Spacing()
-	text, selected = ImGui.InputTextMultiline("Class Name", self.DumpClassName, 100, 200, 20)
-	if selected then self.DumpClassName = text end
-
-	if ImGui.Button("Dump class") then 
-		self:DumpClass(self.DumpClassName)
-	end
-end
-
--- Dump information given a class name
-function BradenMenu:DumpClass(className)
-	local comp = GetSingleton(self.DumpClassName)
-
-	local dump = tostring(Dump(comp, false))
-	local file = io.open("Dumps\\" .. self.DumpClassName .. ".lua", "w")
-
-	file:write(tostring(dump))
-	file:close()
 end
 
 -- End of BradenMenu Class

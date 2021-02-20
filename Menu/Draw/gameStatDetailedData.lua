@@ -1,4 +1,6 @@
-function Inspector.DrawgameStatDetailedData(self, gameStatDetailedData)
+local gameStatDetailedData = {}
+
+function gameStatDetailedData:Draw(gameStatDetailedData)
 	ImGui.Indent()
     
     BradenMenu.IGE.ObjectToText("statType" , gameItemObject.statType)
@@ -10,3 +12,5 @@ function Inspector.DrawgameStatDetailedData(self, gameStatDetailedData)
     
 	ImGui.Unindent()
 end
+
+return gameStatDetailedData

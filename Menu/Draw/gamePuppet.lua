@@ -1,4 +1,6 @@
-function Inspector.DrawGamePuppet(self, entity)
+local gamePuppet = {}
+
+function gamePuppet:Draw(entity, inspector)
 	ImGui.Indent()
 
 	-- Functions
@@ -8,30 +10,30 @@ function Inspector.DrawGamePuppet(self, entity)
 	--[[BradenMenu.IGE.ObjectToText("GetTweakDBDisplayName FallBack", entity:GetTweakDBDisplayName(true))
 	BradenMenu.IGE.ObjectToText("GetTweakDBFullDisplayName FallBack", entity:GetTweakDBFullDisplayName(true))]]
 	BradenMenu.IGE.DrawNodeTree("GetAttitude", "gameAttitudeAgent", entity:GetAttitude(), 
-		function(gameAttitudeAgent)  self:DrawgameAttitudeAgent(gameAttitudeAgent) end
+		function(gameAttitudeAgent) BradenMenu.gameAttitudeAgent:Draw(gameAttitudeAgent) end
 	)
 
 	BradenMenu.IGE.DrawNodeTree("GetRecord", "gameDataCharacter_Record", entity:GetRecord(), 
-		function(gameDataCharacter_Record)  self:DrawgameDataCharacter_Record(gameDataCharacter_Record) end
+		function(gameDataCharacter_Record) BradenMenu.gameDataCharacter_Record:Draw(gameDataCharacter_Record) end
 	)
 
 	BradenMenu.IGE.DrawNodeTree("GetMovePolicesComponent", "movePoliciesComponent", entity:GetMovePolicesComponent(), 
-		function(movePoliciesComponent)  self:DrawmovePoliciesComponent(movePoliciesComponent) end
+		function(movePoliciesComponent) BradenMenu.movePoliciesComponent:Draw(movePoliciesComponent) end
 	)
 
 	local someBool, objects = entity:GetCurrentlyEquippedItems()
 	BradenMenu.IGE.DisplayObjectArray("GetCurrentlyEquippedItems", "gameItemObject", objects,
-		function(key, value) self:DrawgameItemObject("gameItemObject", value)end
+		function(key, value) BradenMenu.gameItemObject:Draw("gameItemObject", value)end
 	)
 
 	BradenMenu.IGE.DrawNodeTree("GetAnimationControllerComponent", "entAnimationControllerComponent", entity:GetAnimationControllerComponent(), 
-		function(entAnimationControllerComponent)  self:DrawentAnimationControllerComponent(entAnimationControllerComponent) end
+		function(entAnimationControllerComponent)  BradenMenu.entAnimationControllerComponent:Draw(entAnimationControllerComponent) end
 	)
 
-	self:DrawWindowCName("GetGender", entity:GetGender())
-	self:DrawWindowCName("GetBodyType", entity:GetBodyType())
+	BradenMenu.CName:Draw("GetGender", entity:GetGender())
+	BradenMenu.CName:Draw("GetBodyType", entity:GetBodyType())
 	BradenMenu.IGE.DisplayVector4("GetLastValidNavmeshPoint", entity:GetLastValidNavmeshPoint()) 
-	self:DrawWindowCName("GetResolvedGenderName", entity:GetResolvedGenderName())
+	BradenMenu.CName:Draw("GetResolvedGenderName", entity:GetResolvedGenderName())
 	BradenMenu.IGE.DisplayVector4("GetVelocity", entity:GetVelocity()) 
 	BradenMenu.IGE.ObjectToText("HasCPOMissionData" , entity:HasCPOMissionData())
 	BradenMenu.IGE.ObjectToText("HasCrowdStaticLOD" , entity:HasCrowdStaticLOD())
@@ -44,7 +46,7 @@ function Inspector.DrawGamePuppet(self, entity)
 	ImGui.Unindent()
 end
 
-function Inspector.DrawEditGamePuppet(self, entity)
+function gamePuppet:DrawEdit(entity, inspector)
 	ImGui.Indent()
 	if ImGui.Button("SetForcedVisible") then Game.GetAnimationSystem():SetForcedVisible(entity:GetEntityID(), true) end
 	if ImGui.Button("CacheLootForDroping") then entity:CacheLootForDroping() end
@@ -53,12 +55,35 @@ function Inspector.DrawEditGamePuppet(self, entity)
 	if ImGui.Button("DropLootBag") then entity:DropLootBag() end
 	if ImGui.Button("GenerateLoot") then entity:GenerateLoot() end
 	if ImGui.Button("SendAIDeathSignal") then entity:SendAIDeathSignal() end
-	--if ImGui.Button("SetIsDead") then entity:GetPuppetPS():SetIsDead(true) end
-	if ImGui.Button("SetAttitudeGroup hostile") then entity:GetAttitude():SetAttitudeGroup("hostile") end
-	if ImGui.Button("SetAttitudeGroup civilian") then entity:GetAttitude():SetAttitudeGroup("civilian") end
-	if ImGui.Button("SetAttitudeGroup neutral") then entity:GetAttitude():SetAttitudeGroup("neutral") end
-	if ImGui.Button("SetAttitudeGroup player") then entity:GetAttitude():SetAttitudeGroup("player") end
+	if ImGui.Button("Pop Head") then entity:GetDismembermentComponent():DoDismemberment(1, 1, 0, true, "", 0) end
+	--if ImGui.Button("Move") then entity:GetMovePolicesComponent():GetTopPolicies():SetDestinationPosition(Game.GetPlayer():GetWorldPosition()) end
+
+	ImGui.Text("Some of these won't work. It just won't change if it fails...")
+	local current_item, clicked = ImGui.Combo("SetAttitudeGroup", inspector.SelectedAttitudeGroup - 1, BradenMenu.AttitudeGroups, #BradenMenu.AttitudeGroups)
+	if clicked then
+		local lastSelected = inspector.SelectedAttitudeGroup
+		inspector.SelectedAttitudeGroup = current_item + 1
+		local selected = (BradenMenu.AttitudeGroups[inspector.SelectedAttitudeGroup]):BMFirstToLower()
+		entity:GetAttitude():SetAttitudeGroup(selected)
+
+		-- Test if it changed worked
+		if Game.NameToString(entity:GetAttitude():GetAttitudeGroup()) ~= selected then
+			entity:GetAttitude():SetAttitudeGroup((BradenMenu.AttitudeGroups[lastSelected]):BMFirstToLower())
+			inspector.SelectedAttitudeGroup = lastSelected
+		end
+	end
+
+	local current_item, clicked = ImGui.Combo("SetReactionPreset", inspector.SelectedReactionPreset - 1, BradenMenu.ReactionPresets, #BradenMenu.ReactionPresets)
+	if clicked then
+		local gamedataTweakDBInterface = GetSingleton("gamedataTweakDBInterface")
+		inspector.SelectedReactionPreset = current_item + 1
+		local selected = (BradenMenu.ReactionPresets[inspector.SelectedReactionPreset])
+		entity.reactionComponent:SetReactionPreset(gamedataTweakDBInterface:GetReactionPresetRecord(TweakDBID.new(selected)))
+	end
+
 	if ImGui.Button("Toggle Move Policies") then entity:GetMovePolicesComponent():Toggle(not entity:GetMovePolicesComponent():IsEnabled()) end
 	--if ImGui.Button("Toggle Dismemberment") then entity:GetDismembermentComponent():Toggle(not entity:GetDismembermentComponent():IsEnabled()) end
 	ImGui.Unindent()
 end
+
+return gamePuppet
