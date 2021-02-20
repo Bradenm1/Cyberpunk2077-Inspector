@@ -55,7 +55,7 @@ function EntityInspect:DrawEdit(entity, inspector)
 
 	if entity:IsVehicle() then 
 		if ImGui.CollapsingHeader("vehicleCarBaseObject") then
-			BradenMenu.vehicleCarBaseObject:DrawEdit(entity)
+			BradenMenu.vehicleCarBaseObject:DrawEdit(entity, inspector)
 		end
 	end
 

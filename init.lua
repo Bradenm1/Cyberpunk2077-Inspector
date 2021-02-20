@@ -55,9 +55,11 @@ function BradenMenu:LoadModules()
 	-- Class modules
 	self.InspectorModule = require("Menu/Inspector.lua")
 	self.PositionChangerModule = require("Menu/Objects/PositionChanger")
+	self.VehicleLightColourChangerModule = require("Menu/Objects/VehicleLightColourChanger")
 
 	-- Data 
 	self.GodModeData = require("Menu/Data/GodModeData")
+	self.VehicleELightType = require("Menu/Data/vehicleELightType")
 	self.AttitudeGroups = require("Menu/Data/AttitudeGroups")
 	self.ReactionPresets = require("Menu/Data/ReactionPresets")
 	self.Components = require("Menu/Data/Components")

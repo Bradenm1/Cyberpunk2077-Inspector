@@ -56,7 +56,6 @@ function gamePuppet:DrawEdit(entity, inspector)
 	if ImGui.Button("GenerateLoot") then entity:GenerateLoot() end
 	if ImGui.Button("SendAIDeathSignal") then entity:SendAIDeathSignal() end
 	if ImGui.Button("Pop Head") then entity:GetDismembermentComponent():DoDismemberment(1, 1, 0, true, "", 0) end
-	--if ImGui.Button("Move") then entity:GetMovePolicesComponent():GetTopPolicies():SetDestinationPosition(Game.GetPlayer():GetWorldPosition()) end
 
 	ImGui.Text("Some of these won't work. It just won't change if it fails...")
 	local current_item, clicked = ImGui.Combo("SetAttitudeGroup", inspector.SelectedAttitudeGroup - 1, BradenMenu.AttitudeGroups, #BradenMenu.AttitudeGroups)
@@ -75,10 +74,15 @@ function gamePuppet:DrawEdit(entity, inspector)
 
 	local current_item, clicked = ImGui.Combo("SetReactionPreset", inspector.SelectedReactionPreset - 1, BradenMenu.ReactionPresets, #BradenMenu.ReactionPresets)
 	if clicked then
+		if entity.reactionComponent == nil then
+			entity.reactionComponent = NewObject('ReactionManagerComponent')
+		end
 		local gamedataTweakDBInterface = GetSingleton("gamedataTweakDBInterface")
 		inspector.SelectedReactionPreset = current_item + 1
 		local selected = (BradenMenu.ReactionPresets[inspector.SelectedReactionPreset])
 		entity.reactionComponent:SetReactionPreset(gamedataTweakDBInterface:GetReactionPresetRecord(TweakDBID.new(selected)))
+		--entity.reactionComponent:SetBaseReactionPreset(true)
+		--entity.reactionComponent:ReevaluateReactionPreset(true)
 	end
 
 	if ImGui.Button("Toggle Move Policies") then entity:GetMovePolicesComponent():Toggle(not entity:GetMovePolicesComponent():IsEnabled()) end

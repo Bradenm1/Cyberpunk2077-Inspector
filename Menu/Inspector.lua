@@ -19,6 +19,7 @@ function Inspector:new(parent, entity, windowName)
 	o.SelectedAttitudeGroup = 1
 	o.SelectedReactionPreset = 1
 	o.PositionChanger = BradenMenu.PositionChangerModule:new(entity)
+	o.VehicleLightColourChanger = BradenMenu.VehicleLightColourChangerModule:new(entity)
 	o.UniqueID = BradenMenu.UniqueIDObject:GetNextID()
 
 	self.__index = self
@@ -52,6 +53,7 @@ function Inspector:DrawEntityWindowsPlain(entity, windowName)
 	if entity == nil then 
 		entity = Game:BMGetTargetEntity()
 		self.PositionChanger.Entity = entity
+		self.VehicleLightColourChanger.Entity = entity
 	end
 
 	-- Draw the tabs within the window

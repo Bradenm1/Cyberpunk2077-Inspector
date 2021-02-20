@@ -1,15 +1,16 @@
 local vehicleCarBaseObject = {}
 
-function vehicleCarBaseObject:Draw(entity)
+function vehicleCarBaseObject:Draw(entity, inspector)
 	ImGui.Indent()
 
 	ImGui.Unindent()
 end
 
-function vehicleCarBaseObject:DrawEdit(entity)
+function vehicleCarBaseObject:DrawEdit(entity, inspector)
     ImGui.Indent()
     local vehController = entity:GetController()
-    if ImGui.Button("Lights") then vehController:SetLightStrength(1, 10000000, 1) end
+    if ImGui.Button("Lights") then vehController:SetLightStrength(1, 10, 1) end
+    inspector.VehicleLightColourChanger:Draw()
     if ImGui.Button("ToggleOn") then entity:TurnOn(not entity:IsTurnedOn()) end
     if ImGui.Button("ToggleEngineOn") then entity:TurnEngineOn(not entity:IsEngineTurnedOn()) end
     if ImGui.Button("DetachAllParts") then entity:DetachAllParts() end
