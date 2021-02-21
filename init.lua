@@ -31,16 +31,10 @@ function BradenMenu:new()
 	self.__index = self
 
 	-- Register vars
+	self.HasInitialized = false
 	self.RootPath = "Cyberpunk2077-Inspector"
 	self.Description = "Tool used for Inspecting Entities among other things."
 	self.FilterText = "" -- The text to filter in the inspector windows
-
-	-- Cache
-	-- pcall is bugged, can't get it to work with modules and is pointless
-	self:ErrorHandler(function() self:LoadModules() end)
-
-	self.UniqueIDObject = require("Menu/Misc/UniqueID"):new() -- UniqueID ID used with PushID to stop conflicts
-	self.DebugMenu = require("Menu/DebugMenu"):new()
 	
 	-- Register the callbacks
 	self:ErrorHandler(function() self:RegisterCallbacks() end)
@@ -70,23 +64,56 @@ function BradenMenu:LoadModules()
 	end
 end
 
+function BradenMenu:OnInit()
+	-- Cache
+	-- pcall is bugged, can't get it to work with modules and is pointless
+	self:LoadModules()
+
+	self.UniqueIDObject = require("Menu/Misc/UniqueID"):new() -- UniqueID ID used with PushID to stop conflicts
+	self.DebugMenu = require("Menu/DebugMenu"):new()
+
+	self.HasInitialized = true
+end
+
 -- Register the callbacks for this mod menu
 function BradenMenu:RegisterCallbacks() 
 
+	registerForEvent("onInit", function()
+		self:ErrorHandler(function() 
+			self:OnInit()
+		end)
+	end)
+
 	registerForEvent("onUpdate", function(deltaTime)
-		self:ErrorHandler(function(deltaTime) self.DebugMenu:onUpdate(deltaTime) end)
+		if self.HasInitialized then
+			self:ErrorHandler(function(deltaTime) 
+				self.DebugMenu:onUpdate(deltaTime) 
+			end)
+		end
 	end)
 
 	registerForEvent("onOverlayOpen", function()
-		self:ErrorHandler(function() self.DebugMenu:onOverlayOpen() end)
+		if self.HasInitialized then
+			self:ErrorHandler(function() 
+				self.DebugMenu:onOverlayOpen() 
+			end)
+		end
     end)
     
 	registerForEvent("onOverlayClose", function()
-		self:ErrorHandler(function() self.DebugMenu:onOverlayClose() end)
+		if self.HasInitialized then
+			self:ErrorHandler(function() 
+				self.DebugMenu:onOverlayClose() 
+			end)
+		end
     end)
 
 	registerForEvent("onDraw", function()
-		self:ErrorHandler(function() self.DebugMenu:OnDraw() end)
+		if self.HasInitialized then
+			self:ErrorHandler(function() 
+				self.DebugMenu:OnDraw() 
+			end)
+		end
 	end)
 end
 
