@@ -1,20 +1,8 @@
 -- Begin of DebugMenu Class
 
 --[[
-	Overview mod information:
-		I use extension methods to spread the information out, not have it all within one file. 
-		Makes it easier to understand what's what when looking at the directory hierarchy
-
-		- 'Draw'
-			Contains the files needed to draw information to the screen for the inspector
-		- 'Misc'
-			Contains misc files used in the project
-		- 'Dumps'
-			Contains files I've dumped to view their information when adding new things to the menu.
-			You can add your own if you use the debug tab.
-
 	DebugMenu Information:
-		An inspector tool created for inspecting entities within Cyberpunk 2077.
+		Contains general infomation for the mod.
 
 	Created by Bradenm1
 ]]--
@@ -71,6 +59,7 @@ function DebugMenu:OnDraw()
 	end
 end
 
+-- This will run even when the menu is not drawing. Allows edits such as freezing positions with the menu closed.
 function DebugMenu:AlwaysRun()
 	if self.Inspector ~= nil and self.Inspector.PositionChanger ~= nil then
 		self.Inspector:RunAlways()

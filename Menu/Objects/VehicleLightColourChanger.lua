@@ -1,14 +1,15 @@
-VehicleLightColourChanger = {}
+local VehicleLightColourChanger = {}
 
 function VehicleLightColourChanger:new(entity)
 	local o = {} 
 
 	-- All inspectors share these vars
 	o.Entity = entity
-	o.ValueSpeed = 0.1
+	o.ValueSpeed = 0.1 -- The value at which sliders are changed
 	o.LightStrength = 1
-	o.SelectedVehicleELightType = 5
-	o.DoAllLights = false
+	o.SelectedVehicleELightType = 5 -- The vehicle light type selection
+	o.DoAllLights = true
+
 	o.Colour = NewObject('Color')
 	o.Colour.Red = 1
 	o.Colour.Green = 0
@@ -20,7 +21,6 @@ function VehicleLightColourChanger:new(entity)
 end
 
 function VehicleLightColourChanger:Draw()
-	-- Return if positions are frozen
     ImGui.Text("Vehicle Light Colour Changer")
 
 	local value, pressed = ImGui.Checkbox("Do All Lights", self.DoAllLights)
@@ -45,7 +45,8 @@ function VehicleLightColourChanger:Draw()
 		self:SetLights()
 	end
 
-	local col, used = ImGui.ColorEdit3("Label", { self.Colour.Red / 255, self.Colour.Green / 255, self.Colour.Blue / 255, self.Colour.Alpha / 255 })
+	-- The colour window
+	local col, used = ImGui.ColorEdit3("Colour", { self.Colour.Red / 255, self.Colour.Green / 255, self.Colour.Blue / 255, self.Colour.Alpha / 255 })
 	if used then 
 		self.Colour.Red = math.floor((col[1] * 255) + 0.5)
 		self.Colour.Green = math.floor((col[2] * 255) + 0.5)
@@ -56,16 +57,19 @@ function VehicleLightColourChanger:Draw()
 
 end
 
+-- Sets the light colour for the Entity
 function VehicleLightColourChanger:SetLights() 
 	local vehController = self.Entity:GetController()
 	if vehController == nil then return end
 
 	if self.DoAllLights then 
+		-- Changes all light colours
 		for i, name in pairs(BradenMenu.VehicleELightType) do
 			vehController:SetLightColor(i, self.Colour, 0) 
 			vehController:SetLightStrength(i, self.LightStrength, 0)
 		end
 	else
+		-- Changes just the selected light colour
 		vehController:SetLightColor(self.SelectedVehicleELightType, self.Colour, 0) 
 		vehController:SetLightStrength(self.SelectedVehicleELightType, self.LightStrength, 0)
 	end

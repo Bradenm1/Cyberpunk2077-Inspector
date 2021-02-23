@@ -12,10 +12,18 @@ function EntityInspect:Draw(entity, inspector)
 		BradenMenu.gameObject:Draw(entity)
 	end
 
+	if entity:IsDevice() then 
+		if ImGui.CollapsingHeader("FakeDoor") then 
+			ImGui.Indent()
+			BradenMenu.IGE.ObjectToText("DeterminGameplayRole", entity:DeterminGameplayRole())
+			ImGui.Unindent()
+		end
+	end
+
 	-- Display information related to the vehicleCarBaseObject
 	if entity:IsVehicle() then 
 		if ImGui.CollapsingHeader("vehicleCarBaseObject") then 
-			
+			BradenMenu.vehicleCarBaseObject:Draw(entity, inspector)
 		end
 	end
 
@@ -23,6 +31,14 @@ function EntityInspect:Draw(entity, inspector)
 	if entity:IsNPC() or entity:IsPlayer() then 
 		if ImGui.CollapsingHeader("gamePuppet") then 
 			BradenMenu.gamePuppet:Draw(entity, inspector)
+		end
+
+		if ImGui.CollapsingHeader("TimeDilatable") then 
+			ImGui.Indent()
+			BradenMenu.IGE.ObjectToText("GetTimeDilationValue", entity:GetTimeDilationValue())
+			BradenMenu.IGE.ObjectToText("IsIgnoringGlobalTimeDilation", entity:IsIgnoringGlobalTimeDilation())
+			BradenMenu.IGE.ObjectToText("IsIgnoringTimeDilation", entity:IsIgnoringTimeDilation())
+			ImGui.Unindent()
 		end
 	end
 

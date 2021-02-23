@@ -3,42 +3,29 @@ local entEntity = {}
 function entEntity:Draw(entity)
 	ImGui.Indent()
 
+	BradenMenu.CName:Draw("GetCurrentAppearanceName", entity:GetCurrentAppearanceName())
+
 	-- Functions
 	BradenMenu.IGE.DrawNodeTree("GetEntityID", "entEntityID", entity:GetEntityID(), 
 		function(entEntityID) BradenMenu.entEntityID:Draw(entEntityID) end
 	)
 	
-	BradenMenu.IGE.ObjectToText("GetControllingPeerID", entity:GetControllingPeerID())
-	--ImGui.Text("CurrentAppearanceName: " .. tostring(entity:GetCurrentAppearanceName())::GetCNameName())
-	BradenMenu.CName:Draw("GetCurrentAppearanceName", entity:GetCurrentAppearanceName())
-	BradenMenu.CName:Draw("GetCurrentContext", entity:GetCurrentContext())
-	BradenMenu.IGE.ObjectToText("GetControllingPeerID", entity:GetControllingPeerID())
 	BradenMenu.IGE.DisplayQuaternion("GetWorldOrientation", entity:GetWorldOrientation())
 	BradenMenu.IGE.DisplayVector4("GetWorldForward", entity:GetWorldForward())
 	BradenMenu.IGE.DisplayVector4("GetWorldPosition", entity:GetWorldPosition())
 	BradenMenu.IGE.DisplayVector4("GetWorldRight", entity:GetWorldRight())
 	BradenMenu.IGE.DisplayVector4("GetWorldUp", entity:GetWorldUp())
-	BradenMenu.IGE.ObjectToText("GetWorldYaw", entity:GetWorldYaw())
 
 	BradenMenu.IGE.DrawNodeTree("GetWorldTransform", "WorldTransform", entity:GetWorldTransform(), 
 		function(worldTransform) BradenMenu.WorldTransform:Draw(worldTransform) end
 	)
+	BradenMenu.IGE.ObjectToText("GetWorldYaw", entity:GetWorldYaw())
 
-	--self:AddConpoment(entity:GetWorldTransform())
+	BradenMenu.IGE.ObjectToText("GetControllingPeerID", entity:GetControllingPeerID())
 	BradenMenu.IGE.ObjectToText("IsAttached", entity:IsAttached()) -- Good way to tell if object has been deleted!
 	BradenMenu.IGE.ObjectToText("IsControlledByAnotherClient", entity:IsControlledByAnotherClient())
 	BradenMenu.IGE.ObjectToText("IsControlledByAnyPeer", entity:IsControlledByAnyPeer())
 	BradenMenu.IGE.ObjectToText("IsControlledByLocalPeer", entity:IsControlledByLocalPeer())
-	BradenMenu.IGE.ObjectToText("ShouldEnableRemoteLayer", entity:ShouldEnableRemoteLayer())
-	BradenMenu.IGE.ObjectToText("HasDirectActionsActive", entity:HasDirectActionsActive())
-	BradenMenu.IGE.ObjectToText("CanRevealRemoteActionsWheel", entity:CanRevealRemoteActionsWheel())
-	BradenMenu.IGE.ObjectToText("ShouldRegisterToHUD", entity:ShouldRegisterToHUD())
-	BradenMenu.IGE.ObjectToText("GetIsIconic", entity:GetIsIconic())
-	BradenMenu.IGE.ObjectToText("GetContentScale", entity:GetContentScale())
-	BradenMenu.IGE.ObjectToText("IsExplosive", entity:IsExplosive())
-	BradenMenu.IGE.ObjectToText("IsFastTravelPoint", entity:IsFastTravelPoint())
-	BradenMenu.IGE.ObjectToText("HasAnySlaveDevices", entity:HasAnySlaveDevices())
-	BradenMenu.IGE.ObjectToText("IsBodyDisposalPossible", entity:IsBodyDisposalPossible())
 	BradenMenu.IGE.ObjectToText("IsReplicated", entity:IsReplicated())
 
 	if entity:IsPlayer() then
@@ -46,18 +33,6 @@ function entEntity:Draw(entity)
 			function(key, value) BradenMenu.CName:Draw("Tag", value) end
 		)
 	end
-
-	-- Variables
-	
-	
-	if entity.statesComponent ~= nil then 
-		BradenMenu.IGE.ObjectToText("regularRecordID", entity.statesComponent.regularRecordID)
-		BradenMenu.IGE.ObjectToText("highLevelAnimFeatureName", entity.statesComponent.highLevelAnimFeatureName)
-		BradenMenu.IGE.ObjectToText("upperBodyAnimFeatureName", entity.statesComponent.upperBodyAnimFeatureName)
-		BradenMenu.IGE.ObjectToText("stanceAnimFeatureName", entity.statesComponent.stanceAnimFeatureName)
-		BradenMenu.IGE.ObjectToText("name", entity.statesComponent.name)
-	end
-
 	ImGui.Unindent()
 end
 

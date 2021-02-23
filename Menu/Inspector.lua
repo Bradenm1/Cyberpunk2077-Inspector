@@ -16,10 +16,16 @@ function Inspector:new(parent, entity, windowName)
 	o.Entity = entity
 	o.WindowName = windowName or "Targeted"
 	o.SavedEntityCacheTextName = "exampleName"
+
+	-- Cached data used in the menu instance
 	o.SelectedAttitudeGroup = 1
 	o.SelectedReactionPreset = 1
+
+	-- Objects
 	o.PositionChanger = BradenMenu.PositionChangerModule:new(entity)
 	o.VehicleLightColourChanger = BradenMenu.VehicleLightColourChangerModule:new(entity)
+
+	-- The unique id for this instance
 	o.UniqueID = BradenMenu.UniqueIDObject:GetNextID()
 
 	self.__index = self

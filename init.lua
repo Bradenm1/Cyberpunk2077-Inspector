@@ -5,13 +5,16 @@
 		I use extension methods to spread the information out, not have it all within one file. 
 		Makes it easier to understand what's what when looking at the directory hierarchy
 
+		- 'Data'
+			Contains the tables which store information about certain objects, such as enums or names of things.
 		- 'Draw'
 			Contains the files needed to draw information to the screen for the inspector
 		- 'Misc'
 			Contains misc files used in the project
+		- 'Objects'
+			Contains object modules used in the project
 		- 'Dumps'
 			Contains files I've dumped to view their information when adding new things to the menu.
-			You can add your own if you use the debug tab.
 
 	BradenMenu Information:
 		An inspector tool created for inspecting entities within Cyberpunk 2077.
@@ -23,7 +26,7 @@
 require("Menu/Misc/String")
 require("Menu/Misc/Game")
 
-BradenMenu = {}
+BradenMenu = {} -- Global variable can be accessed anywhere as seen throughout the mod
 
 -- Constructor
 function BradenMenu:new()
@@ -31,7 +34,7 @@ function BradenMenu:new()
 	self.__index = self
 
 	-- Register vars
-	self.HasInitialized = false
+	self.HasInitialized = false -- If the menu is initialized and can be used
 	self.RootPath = "Cyberpunk2077-Inspector"
 	self.Description = "Tool used for Inspecting Entities among other things."
 	self.FilterText = "" -- The text to filter in the inspector windows
@@ -42,7 +45,8 @@ function BradenMenu:new()
    return BradenMenu
 end
 
-function BradenMenu:LoadModules()
+-- Called when the mod needs to cache information which can then be used elsewhere
+function BradenMenu:CacheInformation()
 	-- Extension of ImGui
 	self.IGE = require("Menu/Misc/ImGuiExtension")
 
@@ -64,13 +68,13 @@ function BradenMenu:LoadModules()
 	end
 end
 
+-- Called when the mod is loaded
 function BradenMenu:OnInit()
-	-- Cache
 	-- pcall is bugged, can't get it to work with modules and is pointless
-	self:LoadModules()
+	self:CacheInformation()
 
 	self.UniqueIDObject = require("Menu/Misc/UniqueID"):new() -- UniqueID ID used with PushID to stop conflicts
-	self.DebugMenu = require("Menu/DebugMenu"):new()
+	self.DebugMenu = require("Menu/DebugMenu"):new() -- Create a debug menu object
 
 	self.HasInitialized = true
 end
@@ -99,7 +103,7 @@ function BradenMenu:RegisterCallbacks()
 			end)
 		end
     end)
-    
+	
 	registerForEvent("onOverlayClose", function()
 		if self.HasInitialized then
 			self:ErrorHandler(function() 
@@ -117,6 +121,7 @@ function BradenMenu:RegisterCallbacks()
 	end)
 end
 
+-- Error handles a given function
 function BradenMenu:ErrorHandler(func)
 	-- Run the function, also check if an error occured
 	local success, err = pcall(function () func() end)

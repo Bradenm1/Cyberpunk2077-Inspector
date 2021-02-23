@@ -1,4 +1,4 @@
-UniqueID = {}
+local UniqueID = {}
 
 function UniqueID:new()
     setmetatable(UniqueID, self)

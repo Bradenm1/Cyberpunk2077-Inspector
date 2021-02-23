@@ -1,16 +1,17 @@
-PositionChanger = {}
+local PositionChanger = {}
 
 function PositionChanger:new(entity)
 	local o = {} 
 
 	-- All inspectors share these vars
 	o.Entity = entity
-	o.ValueSpeed = 0.01
+	o.ValueSpeed = 0.01 -- The value at which sliders are changed
 
 	o.FreezePosition = false
 
 	o.WorldPosition = Vector4.new(0,0,0,0)
 	o.EulerAngles = EulerAngles.new(0,0,0)
+	
 	self.__index = self
    	return setmetatable(o, self)
 end
