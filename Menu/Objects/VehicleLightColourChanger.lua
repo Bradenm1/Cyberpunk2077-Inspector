@@ -5,8 +5,8 @@ function VehicleLightColourChanger:new(entity)
 
 	-- All inspectors share these vars
 	o.Entity = entity
-	o.ValueSpeed = 1
-	o.LightStrength = 5
+	o.ValueSpeed = 0.1
+	o.LightStrength = 1
 	o.SelectedVehicleELightType = 5
 	o.DoAllLights = false
 	o.Colour = NewObject('Color')
@@ -34,40 +34,26 @@ function VehicleLightColourChanger:Draw()
 		self:SetLights()
 	end
 
-	local value, used = ImGui.DragInt("Value Changed Speed", self.ValueSpeed, 0.01, 0, 255)
+	local value, used = ImGui.DragFloat("Value Changed Speed", self.ValueSpeed, 0.01, 0, 255)
 	if used then 
 		self.ValueSpeed = value
 	end
 
-	local value, used = ImGui.DragInt("Light Strength", self.LightStrength, self.ValueSpeed)
+	local value, used = ImGui.DragFloat("Light Strength", self.LightStrength, self.ValueSpeed)
 	if used then 
 		self.LightStrength = value
 		self:SetLights()
 	end
 
-	local value, used = ImGui.DragInt("Red", self.Colour.Red, self.ValueSpeed, 0, 255)
+	local col, used = ImGui.ColorEdit3("Label", { self.Colour.Red / 255, self.Colour.Green / 255, self.Colour.Blue / 255, self.Colour.Alpha / 255 })
 	if used then 
-		self.Colour.Red = value
+		self.Colour.Red = math.floor((col[1] * 255) + 0.5)
+		self.Colour.Green = math.floor((col[2] * 255) + 0.5)
+		self.Colour.Blue = math.floor((col[3] * 255) + 0.5)
+
 		self:SetLights()
 	end
 
-	local value, used = ImGui.DragInt("Green", self.Colour.Green, self.ValueSpeed, 0, 255)
-	if used then 
-		self.Colour.Green = value
-		self:SetLights()
-	end
-
-	local value, used = ImGui.DragInt("Blue", self.Colour.Blue, self.ValueSpeed, 0, 255)
-	if used then 
-		self.Colour.Blue = value
-		self:SetLights()
-	end
-
-	local value, used = ImGui.DragInt("Alpha", self.Colour.Alpha, self.ValueSpeed, 0, 255)
-	if used then 
-		self.Colour.Alpha = value
-		self:SetLights()
-	end
 end
 
 function VehicleLightColourChanger:SetLights() 
