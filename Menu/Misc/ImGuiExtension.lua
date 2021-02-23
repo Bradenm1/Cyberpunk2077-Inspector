@@ -6,7 +6,7 @@ end
 
 -- Draws a ImGui text to the window
 function ImGuiExtension.ObjectToText(objectName, object)
-	local text = objectName .. ": " .. tostring(object or "nil")
+	local text = objectName .. ": " .. tostring(object)
 	if ImGuiExtension.ContainsText(BradenMenu.FilterText, text) then
 		ImGui.Text(text)
 	end
@@ -43,6 +43,18 @@ function ImGuiExtension.DisplayVector4(vectorName, vector4)
 			ImGuiExtension.ObjectToText("Y", vector4.y)
 			ImGuiExtension.ObjectToText("Z", vector4.z)
             ImGuiExtension.ObjectToText("W", vector4.w)
+        end
+	)
+end
+
+-- Draws a Quaternion
+function ImGuiExtension.DisplayQuaternion(quaternionName, quaternion)
+    ImGuiExtension.DrawNodeTree(quaternionName, "Quaternion", quaternion, 
+		function() 
+            ImGuiExtension.ObjectToText("I", quaternion.i)
+			ImGuiExtension.ObjectToText("J", quaternion.j)
+			ImGuiExtension.ObjectToText("K", quaternion.k)
+            ImGuiExtension.ObjectToText("R", quaternion.r)
         end
 	)
 end
