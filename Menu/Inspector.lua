@@ -57,7 +57,7 @@ function Inspector:DrawEntityWindowsPlain(entity, windowName)
 	
 	-- If the given entity is nil for this window use the entity the player is currently looking at
 	if entity == nil then 
-		entity = Game:BMGetTargetEntity()
+		entity = BradenMenu.GE:BMGetTargetEntity()
 		self.PositionChanger.Entity = entity
 		self.VehicleLightColourChanger.Entity = entity
 	end

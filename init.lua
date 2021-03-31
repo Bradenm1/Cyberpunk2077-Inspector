@@ -24,7 +24,6 @@
 
 -- Load some global functions
 require("Menu/Misc/String")
-require("Menu/Misc/Game")
 
 BradenMenu = {} -- Global variable can be accessed anywhere as seen throughout the mod
 
@@ -49,6 +48,7 @@ end
 function BradenMenu:CacheInformation()
 	-- Extension of ImGui
 	self.IGE = require("Menu/Misc/ImGuiExtension")
+	self.GE = require("Menu/Misc/GameExtension")
 
 	-- Class modules
 	self.InspectorModule = require("Menu/Inspector.lua")

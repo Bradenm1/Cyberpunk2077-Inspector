@@ -2,6 +2,12 @@ local EntityInspect = {}
 
 -- Draw the collapsing headers for the entity
 function EntityInspect:Draw(entity, inspector)
+	--[[if ImGui.CollapsingHeader("ConfigVar") then
+		ImGui.Indent()
+		BradenMenu.IGE.ObjectToText("HasRequestedValue", entity:HasRequestedValue())
+		ImGui.Unindent()
+	end]]
+
 	-- Display information related to the Entity
 	if ImGui.CollapsingHeader("Entity") then
 		BradenMenu.entEntity:Draw(entity)
@@ -16,6 +22,14 @@ function EntityInspect:Draw(entity, inspector)
 		if ImGui.CollapsingHeader("FakeDoor") then 
 			ImGui.Indent()
 			BradenMenu.IGE.ObjectToText("DeterminGameplayRole", entity:DeterminGameplayRole())
+			ImGui.Unindent()
+		end
+	end
+
+	if entity:IsItem() then 
+		if ImGui.CollapsingHeader("ItemObject") then 
+			ImGui.Indent()
+			BradenMenu.ItemObject:Draw(entity)
 			ImGui.Unindent()
 		end
 	end
