@@ -22,9 +22,6 @@
 	Created by Bradenm1
 ]]--
 
--- Load some global functions
-require("Menu/Misc/String")
-
 BradenMenu = {} -- Global variable can be accessed anywhere as seen throughout the mod
 
 -- Constructor
@@ -47,6 +44,7 @@ end
 -- Called when the mod needs to cache information which can then be used elsewhere
 function BradenMenu:CacheInformation()
 	-- Extension of ImGui
+	self.SE = require("Menu/Misc/StringExtension")
 	self.IGE = require("Menu/Misc/ImGuiExtension")
 	self.GE = require("Menu/Misc/GameExtension")
 

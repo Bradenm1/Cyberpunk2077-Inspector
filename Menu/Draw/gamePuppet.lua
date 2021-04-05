@@ -62,12 +62,12 @@ function gamePuppet:DrawEdit(entity, inspector)
 	if clicked then
 		local lastSelected = inspector.SelectedAttitudeGroup
 		inspector.SelectedAttitudeGroup = current_item + 1
-		local selected = (BradenMenu.AttitudeGroups[inspector.SelectedAttitudeGroup]):BMFirstToLower()
+		local selected = BradenMenu.SE.BMFirstToLower(BradenMenu.AttitudeGroups[inspector.SelectedAttitudeGroup])
 		entity:GetAttitude():SetAttitudeGroup(selected)
 
 		-- Test if it changed worked
 		if Game.NameToString(entity:GetAttitude():GetAttitudeGroup()) ~= selected then
-			entity:GetAttitude():SetAttitudeGroup((BradenMenu.AttitudeGroups[lastSelected]):BMFirstToLower())
+			entity:GetAttitude():SetAttitudeGroup(BradenMenu.SE.BMFirstToLower(BradenMenu.AttitudeGroups[lastSelected]))
 			inspector.SelectedAttitudeGroup = lastSelected
 		end
 	end

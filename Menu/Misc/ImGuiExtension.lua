@@ -1,7 +1,7 @@
 local ImGuiExtension = {}
 
 function ImGuiExtension.ContainsText(stringA, stringB)
-	return BradenMenu.FilterText == "" or text:BMContains(BradenMenu.FilterText) ~= nil
+	return BradenMenu.FilterText == "" or BradenMenu.SE.BMContains(stringA, stringB) ~= nil
 end
 
 -- Draws a ImGui text to the window
