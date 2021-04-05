@@ -11,7 +11,7 @@ function AITargetTrackerComponent:Draw(AITargetTrackerComponent)
 				ImGui.Indent()
 				BradenMenu.AITrackedLocation:Draw(value)
 				ImGui.Unindent()
-				ImGui.Unindent()
+				ImGui.TreePop()
 			end
 		end
 	)
@@ -22,7 +22,7 @@ function AITargetTrackerComponent:Draw(AITargetTrackerComponent)
 				ImGui.Indent()
 				BradenMenu.AITrackedLocation:Draw(value)
 				ImGui.Unindent()
-				ImGui.Unindent()
+				ImGui.TreePop()
 			end
 		end
 	)

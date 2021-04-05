@@ -27,7 +27,7 @@ function GameObject:Draw(entity)
 		function(key, value) 
 			if BradenMenu.IGE.TextToTreeNode("GetItemList - gameUniqueItemData - " .. key .. " - " .. tostring(Game.NameToString(value:GetName()))) then 
 				BradenMenu.gameUniqueItemData:Draw(value)
-				ImGui.Unindent()
+				ImGui.TreePop()
 			end 
 		end
 	)

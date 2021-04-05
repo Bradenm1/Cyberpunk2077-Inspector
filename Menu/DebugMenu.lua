@@ -243,9 +243,10 @@ function DebugMenu:DrawAllObjectsTab()
 				function(i, entity) 
 					local name = Game.NameToString(entity:GetDisplayName())
 					if name == "" then name = Game.NameToString(entity:GetCurrentAppearanceName()) end
-					if BradenMenu.IGE.TextToTreeNode(i .. " - entEntity - " .. name) then 
-						BradenMenu.IGE.DrawCacheEntityInput(entity)
-						ImGui.Unindent()
+					name = i .. " - entEntity - " .. name
+					if BradenMenu.IGE.TextToTreeNode(name) then 
+						self:DrawCacheEntityInput(entity, name)
+						ImGui.TreePop()
 					end 
 				end
 			)
@@ -265,6 +266,14 @@ function DebugMenu:DoActionAllObjects(func)
 				func(i, entity) 
 			end
 		end
+	end
+end
+
+-- Draws the input box and the button used for saving a given entity
+function DebugMenu:DrawCacheEntityInput(entity, name)
+	ImGui.Text("Save this Entity into the Saved Entites table in in the Debug Menu.")
+	if ImGui.Button("Save") then 
+		self.SavedEntites[name] = BradenMenu.InspectorModule:new(self, entity, name)
 	end
 end
 
